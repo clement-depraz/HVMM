@@ -1,0 +1,20 @@
+{
+  "name": "api-hvmm",
+  "version": "1.0.0",
+  "description": "HapiJS",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/Sivarogu/HVMM.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "^17.5.4",
+    "require-directory": "^2.1.1"
+  }
+}
