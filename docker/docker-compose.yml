@@ -1,0 +1,27 @@
+version: '2'
+services:
+  mongodb:
+    image: mongo:4
+    container_name: mongodb
+    restart: always
+    volumes:
+      - ./mongodb/backups:/backups
+      - ./mongodb/databaseInit:/docker-entrypoint-initdb.d
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: application
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
