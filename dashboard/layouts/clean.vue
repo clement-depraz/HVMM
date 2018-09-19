@@ -1,15 +1,15 @@
 <template>
   <div>
-    <Navigation/>
+    <NavigationClean/>
     <nuxt/>
   </div>
 </template>
 
 <script>
-import Navigation from '~/components/Navigation.vue'
+import NavigationClean from '~/components/NavigationClean.vue'
 export default {
   components: {
-    Navigation
+    NavigationClean
   }
 }
 </script>
@@ -91,4 +91,3 @@ html {
   background-color: #35495e;
 }
 </style>
-
