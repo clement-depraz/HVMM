@@ -8,6 +8,8 @@ const HapiSwagger = require('hapi-swagger');
 
 const Config = RequireDir(module, './config');
 const Routes = RequireDir(module, './routes');
+const MySQL = require('./mysql');
+const MongoDB = require('./mongodb');
 
 const init = async () => {
     // Create a new server
@@ -29,12 +31,23 @@ const init = async () => {
     // Add server routes
     await server.route(Routes.routes);
 
+    //Test MySQL connection
+    MySQL.query('SELECT 1', () => {
+        console.log('Connection to MySQL OK');
+    });
+
+    //Test MongoDB connection
+    MongoDB.once('open', () => {
+        console.log('Connection to MongoDB OK');
+    });
+
     // Start server
     await server.start();
     console.log(`Server running at: ${server.info.uri}`);
 };
 
 process.on('unhandledRejection', (err) => {
+
     console.log(err);
     process.exit(1);
 });

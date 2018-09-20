@@ -2,9 +2,7 @@
 
 module.exports = {
     index: {
-        handler: (request, h) => {
-            return 'OK';
-        },
+        handler: (request, h) => 'OK',
         tags: ['api']
     }
 };
