@@ -1,22 +1,47 @@
 'use strict';
 
 const Hapi = require('hapi');
-const requireDir = require('require-directory');
+const RequireDir = require('require-directory');
+const Inert = require('inert');
+const Vision = require('vision');
+const HapiSwagger = require('hapi-swagger');
 
-var Config = requireDir(module, './config');
-
-// Create a new server
-// Setup the server with a host and port
-const server = Hapi.server({
-    host: Config.env.getServer().host,
-    port: Config.env.getServer().port
-});
-
-// Add the server routes
-server.route(Config.routes);
+const Config = RequireDir(module, './config');
+const Routes = RequireDir(module, './routes');
+const MySQL = require('./mysql');
+const MongoDB = require('./mongodb');
 
 const init = async () => {
+    // Create a new server
+    const server = Hapi.server(Config.env);
 
+    // Add server plugins
+    await server.register([
+        Inert,
+        Vision,
+        {
+            plugin: HapiSwagger,
+            options: Config.swaggerOptions
+        },{
+            plugin: require('good'),
+            options: Config.goodOptions
+        }
+    ]);
+
+    // Add server routes
+    await server.route(Routes.routes);
+
+    //Test MySQL connection
+    MySQL.query('SELECT 1', () => {
+        console.log('Connection to MySQL OK');
+    });
+
+    //Test MongoDB connection
+    MongoDB.once('open', () => {
+        console.log('Connection to MongoDB OK');
+    });
+
+    // Start server
     await server.start();
     console.log(`Server running at: ${server.info.uri}`);
 };

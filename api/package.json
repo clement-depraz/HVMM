@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "lab -dL test/*.ts",
+    "test": "lab -v -L -C -c -t 85 test/*.ts",
+    "test-cov": "lab -r html -o coverage/coverage.html test/*.ts"
   },
   "repository": {
     "type": "git",
@@ -14,10 +16,23 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "good": "^8.1.1",
+    "good-console": "^7.1.0",
+    "good-squeeze": "^5.1.0",
     "hapi": "^17.5.4",
-    "require-directory": "^2.1.1"
+    "hapi-swagger": "^9.1.1",
+    "inert": "^5.1.0",
+    "joi": "^13.6.0",
+    "mongoose": "^5.2.16",
+    "mysql": "^2.16.0",
+    "require-directory": "^2.1.1",
+    "vision": "^5.4.0"
   },
   "devDependencies": {
+    "code": "^5.2.0",
+    "eslint-config-hapi": "^12.0.0",
+    "eslint-plugin-hapi": "^4.1.0",
+    "lab": "^16.1.0",
     "nodemon": "^1.18.4"
   }
 }

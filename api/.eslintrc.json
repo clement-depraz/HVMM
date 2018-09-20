@@ -1,0 +1,9 @@
+{
+    "extends": "hapi",
+    "parserOptions": {
+        "ecmaVersion": 2017
+    },
+    "rules": {
+        "hapi/hapi-scope-start": "off"
+    }
+}
