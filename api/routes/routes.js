@@ -24,8 +24,9 @@ module.exports = [{
         auth: false,
         validate: {
             payload: {
-                email: Joi.string().email().required().example(`email@email.com`),
-                password: Joi.string().min(2).max(200).required().example(`password`)
+                // email: Joi.string().email().required().example(`email@email.com`),
+                email: Joi.string().required().example(`admin`),
+                password: Joi.string().min(2).max(200).required().example(`admin`)
             }
         },
         tags: ['api', 'auth']

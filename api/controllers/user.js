@@ -9,7 +9,7 @@ module.exports = {
         const user = await UserModel.getValidatedUser(request.payload.email, request.payload.password);
         if (user) {
             request.cookieAuth.set(user);
-            return 'Login Successful!';
+            return user;
         } else {
             return Boom.unauthorized('Bad email or password');
         }

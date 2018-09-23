@@ -1,7 +1,5 @@
 'use strict';
 
-const Boom = require('boom');
-
 const CrimeModel = require('../model/crime');
 
 module.exports = {
