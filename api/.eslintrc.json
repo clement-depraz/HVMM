@@ -4,6 +4,8 @@
         "ecmaVersion": 2017
     },
     "rules": {
-        "hapi/hapi-scope-start": "off"
+        "hapi/hapi-scope-start": "off",
+        "no-else-return": "off",
+        "brace-style": "off"
     }
 }

@@ -9,5 +9,6 @@ module.exports = {
         title: 'HVMM Api Documentation',
         version: Pack.version
     },
-    lang: 'fr'
+    lang: 'fr',
+    grouping: 'tags'
 };
