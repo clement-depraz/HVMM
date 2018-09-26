@@ -20,7 +20,8 @@
     "chart.js": "^2.7.2",
     "npm": "^6.4.1",
     "nuxt": "^1.0.0",
-    "vue-chartjs": "^3.4.0"
+    "vue-chartjs": "^3.4.0",
+    "vuex-persistedstate": "^2.5.4"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",

@@ -1,12 +1,12 @@
 <template>
         <!-- START NAV -->
-    <nav class="navbar is-light has-shadow  ">
+    <nav class="navbar is-dark has-shadow  ">
         <div class="container">
             <div id="navMenu" class="navbar-menu">
                 <div class="navbar-start">
                     <nuxt-link class="navbar-item" to="/">Home</nuxt-link>
 
-                    <nuxt-link class="navbar-item" to="/crimes">Crimes and Offenses Entries</nuxt-link>
+                    <nuxt-link class="navbar-item" to="/entries">Entries</nuxt-link>
 
                     <nuxt-link class="navbar-item" to="/data">Dashboard</nuxt-link>
 
@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <nav class="navbar is-light">
+        <nav class="navbar is-dark">
             <div class="container">
                 <div class="navbar-burger burger" data-target="navMenu"><span></span></div>
             </div>
