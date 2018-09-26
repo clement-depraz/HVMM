@@ -31,7 +31,6 @@
 
 
 <script>
-import axios from 'axios'
 import UserListRow from '@/components/Admin/UserListRow'
 
 export default {
