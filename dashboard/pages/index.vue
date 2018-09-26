@@ -1,5 +1,4 @@
 <template>
-  <div>
 
     <div class="container">
 
@@ -16,8 +15,8 @@
             <router-link class="button" to="/inscription" tag="button">SIGNUP</router-link>
           </div>
         </div>
+        
     </div>
-  </div>
 </template>
 
 <script>
