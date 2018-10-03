@@ -24,9 +24,25 @@ module.exports = [{
         auth: false,
         validate: {
             payload: {
-                // email: Joi.string().email().required().example(`email@email.com`),
-                email: Joi.string().required().example(`admin`),
-                password: Joi.string().min(2).max(200).required().example(`admin`)
+                email: Joi.string().email().required().example(`email@email.com`),
+                password: Joi.string().min(2).max(200).required().example(`password`)
+            }
+        },
+        tags: ['api', 'auth']
+    }
+}, {
+    method: 'POST',
+    path: '/signin',
+    handler: controller.user.signin,
+    options: {
+        auth: false,
+        validate: {
+            payload: {
+                first_name: Joi.string().required().example(`admin`),
+                last_name: Joi.string().required().example(`admin`),
+                email: Joi.string().email().required().example(`admin@admin.com`),
+                password: Joi.string().min(2).max(200).required().example(`admin`),
+                rank: Joi.number().min(1).required().example(1)
             }
         },
         tags: ['api', 'auth']
@@ -45,8 +61,9 @@ module.exports = [{
     handler: controller.user.getPendingUsers,
     options: {
         auth: {
-            scope: 'admin'
+            scope: 'chef'
         },
+        auth: false,
         tags: ['api', 'user']
     }
 }, {
@@ -55,12 +72,13 @@ module.exports = [{
     handler: controller.user.updatePendingUser,
     options: {
         auth: {
-            scope: 'admin'
+            scope: 'chef'
         },
+        auth: false,
         validate: {
             params: {
                 userId: Joi.number().integer().positive(),
-                isValidated: Joi.boolean().truthy(1, 'valid').falsy(0, 'invalid')
+                isValidated: Joi.boolean().truthy(1, 'valid', true, '1').falsy(0, 'invalid', false, '0')
             }
         },
         tags: ['api', 'user']
@@ -76,30 +94,42 @@ module.exports = [{
         tags: ['api', 'user']
     }
 }, {
-    method: 'POST',
-    path: '/signin',
-    handler: controller.user.signin,
-    options: {
-        auth: false,
-        tags: ['api', 'auth']
-    }
-}, {
     method: 'GET',
     path: '/crime/charts',
     handler: controller.crime.getChartData,
     options: {
         auth: {
-            scope: 'user'
+            scope: 'agent'
+        },
+        tags: ['api', 'crime']
+    }
+}, {
+    method: 'GET',
+    path: '/crime/{crimeId}/detail',
+    handler: controller.crime.getCrimeDetails,
+    options: {
+        auth: {
+            scope: 'agent'
         },
         tags: ['api', 'crime']
     }
 }, {
     method: 'PUT',
-    path: '/crime',
+    path: '/crime/{crimeId}',
     handler: controller.crime.addCrime,
     options: {
         auth: {
-            scope: 'user'
+            scope: 'detective'
+        },
+        tags: ['api', 'crime']
+    }
+}, {
+    method: 'DELETE',
+    path: '/crime',
+    handler: controller.crime.deleteCrime,
+    options: {
+        auth: {
+            scope: 'chef'
         },
         tags: ['api', 'crime']
     }
@@ -109,7 +139,7 @@ module.exports = [{
     handler: controller.crime.searchCrimes,
     options: {
         auth: {
-            scope: 'user'
+            scope: 'agent'
         },
         validate: {
             payload: {

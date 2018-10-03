@@ -9,7 +9,7 @@ const MySQL = require('./mysql');
 const MongoDB = require('./mongodb');
 
 // Create a new server
-const server = Hapi.server(Config.env);
+const server = Hapi.server(Config.env.api);
 
 const init = async () => {
 

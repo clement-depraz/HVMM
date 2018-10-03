@@ -11,12 +11,11 @@ module.exports = {
             request.cookieAuth.set(user);
             return user;
         } else {
-            return Boom.unauthorized('Bad email or password');
+            return Boom.badRequest('Bad email or password');
         }
     },
-    signin: (request, h) => {
-        // TODO
-        return 'OK';
+    signin: async (request, h) => {
+        return await UserModel.signin(request);
     },
     logout: (request, h) => {
         request.cookieAuth.clear();
