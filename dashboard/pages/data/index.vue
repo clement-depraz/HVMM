@@ -1,56 +1,65 @@
 <template>
     <div>
 
-        <section class="hero-body">
-            <div>
-                <h1 class="subtitle">
-                    Data visualisation page
-                </h1>
+        <section class="section">
+            <div >
+                <div class="columns">
+                    <div class="column is-4 is-offset-4">
+                        <h1 class="subtitle">
+                            Crimes and offenses                      
+                        </h1>
+                        <table class="table table-striped ">
+                        <thead>
+                        <tr>
+                            <th>compnos</th>
+                            <th>reportingArea</th>
+                            <th>incidentType</th>
+                            <th>reptDistrict</th>
+                            <th>mainCrimeCode</th>
+                            <th>computedCrimeCode</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <UserListRow
+                            v-for="crime in Crimes"
+                            :key="crime.compnos"
+                            :crime="crime"
+                            @details="crimeDetails"/>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
             </div>
         </section>
-        <div class="columns"> 
-            <div class="column">
-                <table class="table table-striped ">
-                <thead>
-                  <tr>
-                    <th>BPD	report numbe</th>
-                    <th>RA	number</th>
-                    <th>Description</th>
-                    <th>district</th>
-                    <th>BRIC classification</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <UserListRow
-                    v-for="crime in crimes"
-                    :key="crime.id"
-                    :crime="crime"/>
-                </tbody>
-              </table>
-            </div>
-            <div class="column">
-                <LineChart/> 
-            </div>
-        </div>
+
     </div>
 </template>
 
 
 <script>
-import LineChart from '~/components/Data/Charts/LineChart.vue'
 import CrimeListRow from '~/components/Data/CrimeListRow.vue'
 
 export default {
   components: {
-    LineChart, 
     CrimeListRow
-  },
-  async fetch ({store}) {
-      await store.dispatch('setUsers')
+    },
+    methods: {
+        crimeDetails(userId) {
+            console.log('crime');
+        }
+    },
+    async fetch ({store, error}) {
+      try 
+      {
+       //await store.dispatch('setCrimes')
+      }
+      catch (e) {
+        error({ statusCode: 404, message: 'Not Found !' })
+      }
     },
     computed: {
-      Users () {
-        return this.$store.state.users
+      Crimes () {
+        return this.$store.state.crimes
       }
     }
 }

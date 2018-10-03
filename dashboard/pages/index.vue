@@ -10,9 +10,17 @@
           <h2 class="subtitle">
             Hapi Vue Mongo Microservice project
           </h2>
+
           <div>
-            <router-link class="button" to="/login" tag="button">LOGIN</router-link>
-            <router-link class="button" to="/inscription" tag="button">SIGNUP</router-link>
+            <div class="columns">
+               <div class="column is-1 is-offset-4">
+                <router-link class="button is-dark" to="/login" tag="button">LOGIN</router-link>
+               </div>            
+              <div class="column is-4 ">
+                <router-link class="button is-dark" to="/register" tag="button">REGISTER</router-link>
+              </div>
+
+            </div>
           </div>
         </div>
         
