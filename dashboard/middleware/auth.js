@@ -5,10 +5,5 @@ export default function ({ store, error }) {
         statusCode: 401
       })
     }
-    else if (store.state.authUser.rank !== 1) {
-      error({
-        message: 'You are not allowed ',
-        statusCode: 403
-      })
-    }
+
 }

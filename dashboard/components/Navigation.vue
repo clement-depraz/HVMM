@@ -44,7 +44,8 @@
                 <div class="navbar-menu" id="navMenu">
                     <div class="navbar-end">
                       <div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link">account</a> 
-                        <div class="navbar-dropdown"><a class="navbar-item">Logout</a>
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" @click="logout" >Logout</a>
                             </div>
                         </div>
                     </div>
@@ -56,3 +57,17 @@
     
 <!-- END NAV -->
 </template>
+
+<script>
+export default {
+  
+   methods: {
+       logout() {
+          this.$store.dispatch({
+          type: 'logout'})
+         }
+    }
+  
+}
+</script>
+

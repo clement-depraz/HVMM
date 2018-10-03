@@ -96,7 +96,7 @@ data() {
   },
    methods: {
        register(firstname, lastname, rank, email, password ) {
-         this.$store.dispatch({
+          this.$store.dispatch({
           type: 'register',
           firstname: this.firstname,
           lastname: this.lastname,
@@ -104,7 +104,6 @@ data() {
           email: this.email,
           password: this.password
         })
-
     }
    }
 }

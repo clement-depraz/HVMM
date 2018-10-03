@@ -40,6 +40,7 @@
 import CrimeListRow from '~/components/Data/CrimeListRow.vue'
 
 export default {
+  middleware: 'auth',
   components: {
     CrimeListRow
     },

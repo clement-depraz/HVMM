@@ -56,31 +56,46 @@ const createStore = () => {
         //Login app user
         async login ({ commit }, { email, password })
         {
-          console.log("fonction login", email, password)
-          let {data} = await axios.post('http://localhost/login', {email, password})
-          commit('setAuthUser', data)
+          try
+          {
+            console.log("fonction login", email, password)
+            let {data} = await axios.post('http://172.16.24.245:8080/login', {email, password})
+            commit('setAuthUser', data)
+            let myToast = this.$toast.success('Welcome')
+            myToast.goAway(2500); 
+            this.$router.replace({ path: '\data' })
+          }
+          catch(e)
+          {
+            console.log(e)
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500); 
+          }
+
         },
         //Logout app user
-        async logout ({ commi })
+        async logout ({ commit })
         {
-          await axios.post('http://localhost/logout')
+          await axios.get('http://172.16.24.245:8080/logout')
           commit('setAuthUser', null)
         },
+
         //Register user
         async register ({ commit }, { firstname, lastname, rank, email, password })
         {
           try
           {
-            console.log("fonction register", firstname, lastname, rank, email, password)
+            //console.log("fonction register", firstname, lastname, rank, email, password)
             let {data} = await axios.post('http://172.16.24.245:8080/signin', { last_name: lastname, first_name: firstname, email: email, password: password, rank: rank})
-            commit('setAuthUser', data)
+            this.$router.replace({ path: '\data' })
             let myToast = this.$toast.success('Validation request sent to Chief Police Officer')
-            myToast.goAway(1500);  
+            myToast.goAway(2500); 
           }
           catch (e)
           {
+            console.log(e)
             let myToast = this.$toast.error(e)
-            myToast.goAway(1500);   
+            myToast.goAway(1500); 
           }
         },
         //PUT user validation by id
