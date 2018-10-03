@@ -9,9 +9,10 @@ module.exports = {
         database: 'crime_reports_users'
     },
     mongodb: {
-        url: 'mongodb://localhost:27017/crime_reports',
+        url: 'mongodb://admin:admin@localhost:27017/admin',
         options: {
-            useNewUrlParser: true
+            useNewUrlParser: true,
+            dbName: 'crime_reports'
         }
     }
 };

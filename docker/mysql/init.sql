@@ -20,7 +20,8 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL DEFAULT '',
   `rank` int(4) unsigned DEFAULT NULL,
   `isCertified` tinyint(1) NOT NULL DEFAULT 0,
-  `isAdmin` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -29,19 +30,15 @@ ALTER TABLE `users` ADD CONSTRAINT `fr_users_rank` FOREIGN KEY (`rank`) REFERENC
 
 INSERT INTO `rank` (`id`, `label`)
 VALUES
-  (1, 'Commissaire général'),
-  (2, 'Commissaire'),
-  (3, 'Commandant'),
-  (4, 'Capitaine'),
-  (5, 'Lieutenant'),
-  (6, 'Brigadier'),
-  (7, 'Guardien de la paix');
+  (1, 'Chef de la police'),
+  (2, 'Détective'),
+  (3, 'Agent');
 
-INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `rank`, `isCertified`, `isAdmin`)
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `rank`, `isCertified`)
 VALUES
-	(1, 'Didier', 'Mathilde', 'admin', 'admin', 1, 1, 1),
-	(2, 'Maïa', 'Valéry', 'admin2', 'admin2', 2, 1, 1),
-	(3, 'Marie', 'Firmin', 'user1', 'user1', 3, 1, 0),
-	(4, 'Eugénie', 'Toussaint', 'user2', 'user2', 4, 1, 0),
-	(5, 'Armand', 'Hercule', 'user3', 'user3', 5, 0, 0),
-	(6, 'Éliane', 'Danièle', 'user4', 'user4', 6, 0, 0);
+	(1, 'Mathilde', 'Didier', 'admin', 'admin', 1, 1),
+	(2, 'Maïa', 'Valéry', 'admin2', 'admin2', 2, 1),
+	(3, 'Marie', 'Firmin', 'user1', 'user1', 3, 1),
+	(4, 'Eugénie', 'Toussaint', 'user2', 'user2', 1, 0),
+	(5, 'Armand', 'Hercule', 'user3', 'user3', 2, 0),
+	(6, 'Éliane', 'Danièle', 'user4', 'user4', 3, 0);
