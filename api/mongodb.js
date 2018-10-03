@@ -10,6 +10,7 @@ const connectMongoDBDatabase = () => {
     if (!db) {
         const config = Config.databasesOptions.mongodb;
         Mongoose.connect(config.url, config.options);
+        // Mongoose.Promise = global.Promise;
         db = Mongoose.connection;
         db.on('error', (err) => {
             throw err;
