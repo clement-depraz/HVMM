@@ -1,9 +1,22 @@
 <template>
   <div class="error-page">
-    <blockquote>Oops, something went wrong!</blockquote>
+
+    <h1 v-if="error.statusCode === 403">403 You are not allowed !</h1> 
+    <h1 v-if="error.statusCode === 401">403 You are not authenticated !</h1> 
+
+    <blockquote v-else>Oops, something went wrong!</blockquote>
+    <!-- Definir l'erreur en fonction du user -->
     <p>Back to <a href="/">safety</a>!</p>
   </div>
 </template>
+
+<script>
+
+export default {
+  props: ['error'],
+}
+
+</script>
 
 <style scoped>
 .error-page {
@@ -28,3 +41,4 @@ blockquote {
  padding-left:1rem
 }
 </style>
+

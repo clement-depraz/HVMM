@@ -9,18 +9,20 @@
                 <table class="table table-striped ">
                 <thead>
                   <tr>
-                    <th>user name</th>
-                    <th>user id</th>
-                    <th>Description</th>
-                    <th>Valid</th>
-                    <th>Delete</th>
+                    <th>first name</th>
+                    <th>last name</th>
+                    <th>email</th>
+                    <th>Rank</th>
+
                   </tr>
                 </thead>
                 <tbody>
                   <UserListRow
                     v-for="user in Users"
                     :key="user.id"
-                    :user="user"/>
+                    :user="user"
+                    @validate="validateUser"
+                    @delete="deleteUser"/>
                 </tbody>
               </table>
             </div>
@@ -38,14 +40,28 @@ export default {
       UserListRow
     },
     async fetch ({store}) {
-      await store.dispatch('setUsers')
+          await store.dispatch('setUsers')
     },
+    middleware: 'authAdmin',
     computed: {
       Users () {
         return this.$store.state.users
       }
-    }
+    },
+    methods: {
+      validateUser(userId) {
+        this.$store.dispatch({
+          type: 'validateUser',
+          userid: userId
+        })
+    },
+      deleteUser(userId) {
+        this.$store.dispatch({
+          type: 'deleteUser',
+          userid: userId
+        })
+    },   
+  }
 }
-
 
 </script>

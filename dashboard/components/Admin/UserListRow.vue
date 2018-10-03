@@ -1,20 +1,30 @@
 <template>
     <tr>
-        <td>{{ user.name }}</td>
-        <td>{{ user.id }}</td>
-        <td>{{ user.description }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.rank }}</td>
+ 
         <td>
-            <a class="button is-success">Valid</a>
+            <a @click="onValidateClick" class="button is-success">Validate</a>
         </td>
         <td>
-        <a class="button is-danger">Delete</a>
+            <a @click="onDeleteClick" class="button is-danger">Delete</a>
         </td>
     </tr>
 </template>
 <script>
 export default {
   name: 'UserListRow',
-  props: [ 'user' ]
+  props: [ 'user' ],
+  methods: {
+    onValidateClick() {
+      this.$emit('validate', this.user.id);
+    },
+    onDeleteClick() {
+      this.$emit('delete', this.user.id);
+    }
+  }
 };
 </script>
 

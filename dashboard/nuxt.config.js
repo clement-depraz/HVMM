@@ -19,8 +19,13 @@ module.exports = {
   */
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/toast',
   ],
-
+  
+  toast: {
+      position: 'top-center'
+  },
+  
   /*
   //To be sure that axios is imported only one time
   */

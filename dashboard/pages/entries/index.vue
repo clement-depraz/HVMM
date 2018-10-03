@@ -5,7 +5,7 @@
                 <h1 class="subtitle">
                     Crimes and Offenses entry page
                 </h1>
-                <PostEntries/>
+                <PostEntries @submit="onSubmitted"/>
             </div>
         </section>
     </div>
@@ -20,10 +20,15 @@ export default {
   },
     methods: {
     onSubmitted(postData) {
+      /*
       this.$store.dispatch("addPost", postData).then(() => {
-        this.$router.push("/admin");
-      });
+        this.$router.push("/data");
+       
+      }); */
+      console.log("submit")
+       this.$router.push("/data")
     }
-  }
+  },
+  middleware: 'auth'
 };
 </script>
