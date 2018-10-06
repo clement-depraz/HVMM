@@ -6,7 +6,7 @@
 
     <blockquote v-else>Oops, something went wrong!</blockquote>
     <!-- Definir l'erreur en fonction du user -->
-    <p>Back to <a href="/">safety</a>!</p>
+    <p>Back to <nuxt-link to="/">safety</nuxt-link >!</p>
   </div>
 </template>
 

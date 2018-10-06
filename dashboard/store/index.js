@@ -1,6 +1,5 @@
 import Vuex from 'vuex'
 import axios from "axios"
-import Vue from 'vue'
 
 const createStore = () => {
   return new Vuex.Store({
@@ -30,27 +29,29 @@ const createStore = () => {
         async nuxtServerInit ({ commit }, {req}) {
           try
           {
-            let {data} = await axios.get('http://172.16.24.245:8080/user/pending')
+            let {data} = await axios.get('/user/pending')
             commit('setUsers', data)
-            if (req.session && req.session.authUser) {
+           /* if (req.session && req.session.authUser) {
               commit('setAuthUser', req.session.authUser)
             }
+            */
           }
           catch (error)
           {
-            console.error("Can't validate user, ", error.response);
+            console.error("Can't retrieve users", error.response);
+
           }
         }, 
         //Load users for admin page
         async setUsers ({ commit }) {
           try
           {
-            let {data} = await axios.get(`http://172.16.24.245:8080/user/pending`)
+            let {data} = await axios.get(`/user/pending`)
             commit('setUsers', data)
           }
           catch (error)
           {
-            console.error("Can't validate user, ", error.response);
+            console.error("Can't retrieve users", error.response);
           }
         },
         //Login app user
@@ -59,11 +60,11 @@ const createStore = () => {
           try
           {
             console.log("fonction login", email, password)
-            let {data} = await axios.post('http://172.16.24.245:8080/login', {email, password})
+            let {data} = await axios.post('/login', {email, password})
             commit('setAuthUser', data)
             let myToast = this.$toast.success('Welcome')
             myToast.goAway(2500); 
-            this.$router.replace({ path: '\data' })
+            this.$router.replace({ path: '/' })
           }
           catch(e)
           {
@@ -76,8 +77,19 @@ const createStore = () => {
         //Logout app user
         async logout ({ commit })
         {
-          await axios.get('http://172.16.24.245:8080/logout')
-          commit('setAuthUser', null)
+          console.log("logout");
+
+          try
+          {
+            await axios.get('/logout')
+            commit('setAuthUser', null)
+          }
+          catch (e)
+          {
+            console.log(e)
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500); 
+          }
         },
 
         //Register user
@@ -85,8 +97,7 @@ const createStore = () => {
         {
           try
           {
-            //console.log("fonction register", firstname, lastname, rank, email, password)
-            let {data} = await axios.post('http://172.16.24.245:8080/signin', { last_name: lastname, first_name: firstname, email: email, password: password, rank: rank})
+            let {data} = await axios.post('/signin', { last_name: lastname, first_name: firstname, email: email, password: password, rank: rank})
             this.$router.replace({ path: '\data' })
             let myToast = this.$toast.success('Validation request sent to Chief Police Officer')
             myToast.goAway(2500); 
@@ -105,7 +116,7 @@ const createStore = () => {
           try
           {
 
-            let {data} = await axios.put(`http://172.16.24.245:8080/user/${userid}/status/true`)
+            let {data} = await axios.put(`/user/${userid}/status/true`)
             commit('removeUser', userid);
             let myToast = this.$toast.success('Database has been updated successfully')
             myToast.goAway(1500);         
@@ -122,7 +133,7 @@ const createStore = () => {
           console.log("delete user ", userid)
           try
           {
-            let {data} = await axios.put(`http://172.16.24.245:8080/user/${userid}/status/false`)
+            let {data} = await axios.put(`/user/${userid}/status/false`)
             commit('removeUser', userid);
             let myToast = this.$toast.success('Database has been updated successfully')
             myToast.goAway(1500);         
@@ -135,7 +146,7 @@ const createStore = () => {
         },
         //set all crimes
         async setCrimes ({ commit }) {
-          let {data} = await axios.get('http://localhost/data')
+          let {data} = await axios.get('/data')
           commit('SetCrimes')
         }
     }
