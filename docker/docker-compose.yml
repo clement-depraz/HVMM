@@ -72,6 +72,39 @@ services:
       MEMCACHED_HOST: cache
       CACHE_DRIVER: memcached
 
+  export_user:
+    build: ../microservice_export_user/images/nginx
+    container_name: export_user
+    command: nginx -g "daemon off;"
+    ports:
+      - 8082:8082
+    links:
+      - microservice_export_user
+
+  microservice_export_user:
+    container_name: microservice_export_user
+    build: ../microservice_export_user/images/php
+    volumes:
+      - ../microservice_export_user/images/php:/var/www/html
+    working_dir: /var/www/html/app/public
+    command: php-fpm
+    links:
+      - mysql
+      - cache
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 'true'
+      APP_KEY: export_user_service_key
+      APP_LOCALE: en
+      APP_FALLBACK_LOCALE: en
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_DATABASE: crime_reports_users
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      MEMCACHED_HOST: cache
+      CACHE_DRIVER: memcached
+
   cache:
     container_name: microservices_cache
     image: memcached
