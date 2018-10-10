@@ -22,7 +22,6 @@ class AppUserController extends Controller
             'last_name' => 'required|string|max:50',
             'first_name' => 'required|string|max:50',
             'email' => 'required|email|unique:users|max:255',
-            // 'email' => 'required|unique:users|max:255',
             'password' => 'required|max:255',
             'rank' => 'required|numeric|min:1'
         ]);
