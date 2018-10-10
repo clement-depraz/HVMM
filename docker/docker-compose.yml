@@ -21,32 +21,25 @@ services:
     volumes:
       - ./mysql:/docker-entrypoint-initdb.d
     ports:
-      - "3306:3306"
+      - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: root
 
-  # edit_user_service:
-  #   image: richarvey/nginx-php-fpm:latest
-  #   container_name: edit_user_service
-  #   volumes:
-  #     - ../edit_user_service/images/php/app:/var/www/html
-  #     - ../edit_user_service/images/nginx/nginx.conf:/etc/nginx/nginx.conf
-  #     - ../edit_user_service/images/nginx/default.conf:/etc/nginx/conf.d/default.conf
-  #   links:
-  #     - mysql
-  #     - cache
-  #   ports:
-  #     - "9000:9000"
-  #     - "443:443"
-  #     - "80:80"
-  #   environment:
-  #     ERRORS: 1
-  #     WEBROOT: /var/www/html/public
-  #     REMOVE_FILES: 0
-  #     APPLICATION_ENV: development
-  # cache:
-  #   image: memcached
+  hapijs:
+    build: ../api
+    container_name: hapijs
+    restart: always
+    command: npm run start
+    volumes:
+      - ../api:/app
+    ports:
+      - 8080:8080
+    links:
+      - edit_user
+    depends_on:
+      - mysql
+      - mongodb
 
   edit_user:
     build: ../microservice_edit_user/images/nginx
@@ -54,8 +47,6 @@ services:
     command: nginx -g "daemon off;"
     links:
       - microservice_edit_user
-    ports:
-      - "81:80"
 
   microservice_edit_user:
     container_name: microservice_edit_user
@@ -67,12 +58,43 @@ services:
     links:
       - mysql
       - cache
-    ports:
-      - "9001:9000"
     environment:
       APP_ENV: local
       APP_DEBUG: 'true'
       APP_KEY: edit_user_service_key
+      APP_LOCALE: en
+      APP_FALLBACK_LOCALE: en
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_DATABASE: crime_reports_users
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      MEMCACHED_HOST: cache
+      CACHE_DRIVER: memcached
+
+  export_user:
+    build: ../microservice_export_user/images/nginx
+    container_name: export_user
+    command: nginx -g "daemon off;"
+    ports:
+      - 8082:8082
+    links:
+      - microservice_export_user
+
+  microservice_export_user:
+    container_name: microservice_export_user
+    build: ../microservice_export_user/images/php
+    volumes:
+      - ../microservice_export_user/images/php:/var/www/html
+    working_dir: /var/www/html/app/public
+    command: php-fpm
+    links:
+      - mysql
+      - cache
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 'true'
+      APP_KEY: export_user_service_key
       APP_LOCALE: en
       APP_FALLBACK_LOCALE: en
       DB_CONNECTION: mysql

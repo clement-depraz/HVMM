@@ -12,6 +12,7 @@ module.exports = {
         }
     },
     microservices: {
-        edit_user: 'http://172.16.24.245:81'
+        edit_user: 'http://edit_user:8081',
+        export_user: 'http://export_user:8082'
     }
 };

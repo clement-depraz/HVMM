@@ -107,7 +107,22 @@ module.exports = {
     },
 
     exportToCSV() {
-        //call microservice
-        return '//csv file';
+        const axiosInstance = Axios.create({
+            baseURL: Config.env.microservices.export_user,
+            timeout: 4000
+        });
+        return new Promise((resolve, reject) => {
+            axiosInstance.get("/app_user/export")
+                .then(function (response) {
+                    resolve(response.data);
+                })
+                .catch(function (error) {
+                    if (error.response) {
+                        resolve(Boom.badRequest('Bad request'));
+                    } else if (error.request) {
+                        resolve(Boom.serverUnavailable('Microservice unreachable.'));
+                    }
+                });
+        });
     }
 };

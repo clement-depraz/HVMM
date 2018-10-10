@@ -2,14 +2,14 @@
 
 module.exports = {
     mysql: {
-        host: 'localhost',
+        host: 'mysql',
         port: '3306',
         user: 'root',
         password: 'root',
         database: 'crime_reports_users'
     },
     mongodb: {
-        url: 'mongodb://admin:admin@localhost:27017/admin',
+        url: 'mongodb://admin:admin@mongodb:27017/admin',
         options: {
             useNewUrlParser: true,
             dbName: 'crime_reports'
