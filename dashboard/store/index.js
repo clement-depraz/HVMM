@@ -1,6 +1,10 @@
 import Vuex from 'vuex'
 import axios from "axios"
 
+const Hapi = axios.create({
+  baseURL: 'http://192.168.0.36:8080'
+});
+
 const createStore = () => {
   return new Vuex.Store({
     state: {
@@ -46,7 +50,7 @@ const createStore = () => {
         async nuxtServerInit ({ commit }, {req}) {
           try
           {
-            let {data} = await axios.get('http://172.16.25.3:8080/ping')
+            let {data} = await Hapi.get('/ping')
             console.log("Serveur Init");
             if (req.session && req.session.authUser) {
               commit('setAuthUser', req.session.authUser)
@@ -63,7 +67,7 @@ const createStore = () => {
         async setUsers ({ commit }) {
           try
           {
-            let {data} = await axios.get(`http://172.16.25.3:8080/user/pending`)
+            let {data} = await Hapi.get(`/user/pending`)
             commit('setUsers', data)
           }
           catch (error)
@@ -77,7 +81,7 @@ const createStore = () => {
           try
           {
             console.log("fonction login", email, password)
-            let {data} = await axios.post('http://172.16.25.3:8080/login', {email, password})
+            let {data} = await Hapi.post('/login', {email, password})
             commit('setAuthUser', data)
             let myToast = this.$toast.success('Welcome')
             myToast.goAway(2500); 
@@ -98,7 +102,7 @@ const createStore = () => {
 
           try
           {
-            await axios.get('http://172.16.25.3:8080/logout')
+            await Hapi.get('/logout')
             commit('setAuthUser', null)
           }
           catch (e)
@@ -114,7 +118,7 @@ const createStore = () => {
         {
           try
           {
-            let {data} = await axios.post('http://172.16.25.3:8080/signin', { last_name: lastname, first_name: firstname, email: email, password: password, rank: rank})
+            let {data} = await Hapi.post('/signin', { last_name: lastname, first_name: firstname, email: email, password: password, rank: rank})
             this.$router.replace({ path: '\data' })
             let myToast = this.$toast.success('Validation request sent to Chief Police Officer')
             myToast.goAway(2500); 
@@ -133,7 +137,7 @@ const createStore = () => {
           try
           {
 
-            let {data} = await axios.put(`http://172.16.25.3:8080/user/${userid}/status/true`)
+            let {data} = await Hapi.put(`/user/${userid}/status/true`)
             commit('removeUser', userid);
             let myToast = this.$toast.success('Database has been updated successfully')
             myToast.goAway(1500);         
@@ -150,7 +154,7 @@ const createStore = () => {
           console.log("delete user ", userid)
           try
           {
-            await axios.put(`http://172.16.25.3:8080/user/${userid}/status/false`)
+            await Hapi.put(`/user/${userid}/status/false`)
             commit('removeUser', userid);
             let myToast = this.$toast.success('Database has been updated successfully')
             myToast.goAway(1500);         
@@ -165,7 +169,7 @@ const createStore = () => {
         async setCrimes ({ commit }) {
           try
           {
-            let {data} = await axios.post('http://172.16.25.3:8080/crime/search', {page: 1})
+            let {data} = await Hapi.post('/crime/search', {page: 1})
             commit('SetCrimes', data.results)
             commit('SetNbResult', data.nb_result)
           }
@@ -191,7 +195,7 @@ const createStore = () => {
         {
           try
           {
-            let data = await axios.delete(`http://172.16.25.3:8080/crime/${crimeId}`)
+            let data = await Hapi.delete(`/crime/${crimeId}`)
             commit('SetDeleteCrime', crimeId) 
           }
           catch(e)
@@ -204,7 +208,7 @@ const createStore = () => {
         {
           try
           {
-            let data = await axios.post(`http://172.16.25.3:8080/crime`, {newCrime} )
+            let data = await Hapi.post(`/crime`, {newCrime} )
             this.$router.push("/data")
             commit('AddNewCrime', newCrime) 
           }
@@ -218,8 +222,18 @@ const createStore = () => {
         {
           try
           {
-           let data = await axios.get(`http://172.16.25.3:8080/user/export`)
-           console.log(data);
+            Hapi.get(`/user/export.csv`, {
+              responseType: 'blob'
+            }).then((response) => {
+              const url = window.URL.createObjectURL(new Blob([response.data]));
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', 'export.csv');
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            });
+          //  console.log(data);
           }
           catch(e)
           {

@@ -28,11 +28,13 @@ module.exports = {
         return await UserModel.updatePendingUser(request.params.userId, request.params.isValidated);
     },
     exportToCSV: async (request, h) => {
-        const csvFile = await UserModel.exportToCSV();
-        const response = h.response(csvFile);
-        response.header('Content-Type', 'application/octet-stream');
-        //il manque le nom du ficher
-        response.header('Content-Disposition', 'attachment; crime_report_export_user.csv');
-        return response;
+        const result = await UserModel.exportToCSV();
+        if (typeof result === 'string') {
+            const response = h.response(result)
+                .type('text/csv');
+            return response;
+        } else {
+            return result;
+        }
     }
 };
