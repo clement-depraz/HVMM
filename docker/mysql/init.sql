@@ -36,9 +36,9 @@ VALUES
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `rank`, `isCertified`)
 VALUES
-	(1, 'Mathilde', 'Didier', 'admin', 'admin', 1, 1),
-	(2, 'Maïa', 'Valéry', 'admin2', 'admin2', 2, 1),
-	(3, 'Marie', 'Firmin', 'user1', 'user1', 3, 1),
-	(4, 'Eugénie', 'Toussaint', 'user2', 'user2', 1, 0),
-	(5, 'Armand', 'Hercule', 'user3', 'user3', 2, 0),
-	(6, 'Éliane', 'Danièle', 'user4', 'user4', 3, 0);
+	(1, 'Mathilde', 'Didier', 'admin@email.com', 'admin', 1, 1),
+	(2, 'Maïa', 'Valéry', 'admin2@email.com', 'admin2', 2, 1),
+	(3, 'Marie', 'Firmin', 'user1@email.com', 'user1', 3, 1),
+	(4, 'Eugénie', 'Toussaint', 'user2@email.com', 'user2', 1, 0),
+	(5, 'Armand', 'Hercule', 'user3@email.com', 'user3', 2, 0),
+	(6, 'Éliane', 'Danièle', 'user4@email.com', 'user4', 3, 0);

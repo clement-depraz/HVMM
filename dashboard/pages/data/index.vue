@@ -11,12 +11,14 @@
                         <table class="table table-striped ">
                         <thead>
                         <tr>
-                            <th>compnos</th>
-                            <th>reportingArea</th>
-                            <th>incidentType</th>
-                            <th>reptDistrict</th>
-                            <th>mainCrimeCode</th>
-                            <th>computedCrimeCode</th>
+                            <th>COMPNOS</th>
+                            <th>Incident Type</th>
+                            <th>Reporting District</th>
+                            <th>Rept District</th>
+                            <th>Weapon Type</th>
+                            <th>Domestic</th>
+                            <th>Shooting</th>
+                            <th>From Date</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -40,28 +42,23 @@
 import CrimeListRow from '~/components/Data/CrimeListRow.vue'
 
 export default {
-  middleware: 'auth',
   components: {
     CrimeListRow
     },
-    methods: {
-        crimeDetails(userId) {
-            console.log('crime');
-        }
+    async fetch ({store}) {
+          await store.dispatch('setCrimes')
     },
-    async fetch ({store, error}) {
-      try 
-      {
-       //await store.dispatch('setCrimes')
-      }
-      catch (e) {
-        error({ statusCode: 404, message: 'Not Found !' })
-      }
-    },
+  middleware: 'auth',
     computed: {
       Crimes () {
         return this.$store.state.crimes
       }
-    }
+    },
+    methods: {
+        crimeDetails(userId) {
+            console.log('crimeDetails');
+            
+        }
+    },
 }
 </script>
