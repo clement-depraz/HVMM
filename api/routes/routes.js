@@ -6,8 +6,6 @@ const RequireDirectory = require('require-directory');
 
 const controller = RequireDirectory(module, '../controllers');
 
-// When adding a route
-// Check scope, validation, tags, boom, unit tests, caching?
 module.exports = [{
     method: 'GET',
     path: '/ping',
@@ -149,6 +147,11 @@ module.exports = [{
             scope: 'chef'
         },
         auth: false,
+        validate: {
+            params: {
+                crimeId: Joi.number().integer().positive()
+            }
+        },
         tags: ['api', 'crime']
     }
 }, {

@@ -32,11 +32,6 @@ module.exports = {
         if (typeof result === 'string') {
             const response = h.response(result)
                 .type('text/csv');
-                // .header('Content-length', result.length);
-                // .header('Content-type', 'application/pdf')
-            // response.header('Content-Type', 'application/octet-stream');
-            // response.header('Content-Disposition', 'attachment; crime_report_export_user.csv');
-            // return response;
             return response;
         } else {
             return result;

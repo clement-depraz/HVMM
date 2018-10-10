@@ -13,6 +13,6 @@ module.exports = {
         return await CrimeModel.searchCrimes(request.payload);
     },
     deleteCrime: async (request, h) => {
-        return await CrimeModel.searchCrimes(request.payload);
+        return await CrimeModel.deleteCrime(request.params.crimeId);
     }
 };

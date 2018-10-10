@@ -29,7 +29,7 @@ const init = async () => {
 
     server.auth.strategy('session', 'cookie', Config.cookieOptions);
 
-    server.auth.default('session');  
+    server.auth.default('session');
 
     // Add server routes
     await server.route(Routes.routes);
