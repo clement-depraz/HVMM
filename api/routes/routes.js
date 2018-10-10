@@ -91,6 +91,7 @@ module.exports = [{
         auth: {
             scope: 'chef'
         },
+        auth: false,
         tags: ['api', 'user']
     }
 }, {
@@ -101,16 +102,7 @@ module.exports = [{
         auth: {
             scope: 'agent'
         },
-        tags: ['api', 'crime']
-    }
-}, {
-    method: 'GET',
-    path: '/crime/{crimeId}/detail',
-    handler: controller.crime.getCrimeDetails,
-    options: {
-        auth: {
-            scope: 'agent'
-        },
+        auth: false,
         tags: ['api', 'crime']
     }
 }, {
@@ -121,6 +113,7 @@ module.exports = [{
         auth: {
             scope: 'detective'
         },
+        auth: false,
         tags: ['api', 'crime']
     }
 }, {
@@ -131,6 +124,7 @@ module.exports = [{
         auth: {
             scope: 'chef'
         },
+        auth: false,
         tags: ['api', 'crime']
     }
 }, {
@@ -141,10 +135,17 @@ module.exports = [{
         auth: {
             scope: 'agent'
         },
+        auth: false,
         validate: {
             payload: {
-                place: Joi.string(),
-                date: Joi.string()
+                compnos: Joi.number().integer(),
+                incident_type_description: Joi.string(),
+                reptdistrict: Joi.string(),
+                weapontype: Joi.string(),
+                domestic: Joi.boolean().truthy(1, true).falsy(0, false),
+                shooting: Joi.boolean().truthy(1, true).falsy(0, false),
+                fromdate: Joi.string(),
+                page: Joi.number().integer().required().positive().example(1)
             }
         },
         tags: ['api', 'crime']
