@@ -1,31 +1,28 @@
 <template>
-  <form>
-    <AppControlInput v-model="newPost.compnos">Internal	BPD	report number</AppControlInput>
-    <AppControlInput v-model="newPost.reportingArea">RA	number associated with the where the crime was reported	from</AppControlInput>
-    <AppControlInput v-model="newPost.incidentType">BPD incident classification</AppControlInput>
+  <form method="post" @submit.prevent="onSave">
+    <AppControlInput v-model="newPost.compnos" required>Internal	BPD	report number</AppControlInput>
+    <AppControlInput v-model="newPost.reportingarea">RA	number associated with the where the crime was reported	from</AppControlInput>
+    <AppControlInput v-model="newPost.incident_type_description">BPD incident classification</AppControlInput>
     <AppControlInput v-model="newPost.reptDistrict">What district the crime was reported in</AppControlInput>    
-    <AppControlInput v-model="newPost.fromDate">Earliest	date	and	6me	the	incident	could	have	taken	place </AppControlInput>          
-    <AppControlInput v-model="newPost.toDate">Latest	date	and	6me	the	incident	could	have	taken	place </AppControlInput>          
+    <AppControlInput v-model="newPost.fromdate">Earliest	date	and	time	the	incident	could	have	taken	place </AppControlInput>          
+    <AppControlInput v-model="newPost.main_crimecode">main_crimecode </AppControlInput>          
     <AppControlInput v-model="newPost.streetName">Street	name	the	incident	took	place</AppControlInput>          
-    <AppControlInput v-model="newPost.xStreetName">Optional - Crosse street	the	incident	took	place</AppControlInput>          
-    <AppControlInput v-model="newPost.weaponType">Detailed	info	on	the	weapon	type	(free	form	ﬁeld)</AppControlInput>          
-    <AppControlInput v-model="newPost.weaponType">Detailed	info	on	the	weapon	type	(free	form	ﬁeld)</AppControlInput>          
-    <AppControlInput v-model="newPost.buildingType">Info	on	where	the	incident	took	place	(street,	Hospital,	Convenience	Store) </AppControlInput>          
-    <AppControlInput v-model="newPost.placeOfEntry">Point	of	entry. Only	relevant	with	speciﬁc	incident	types </AppControlInput>          
-    <AppControlInput v-model="newPost.perpetratorsNos">Total	number	of	suspects involved</AppControlInput>          
-    <AppControlInput v-model="newPost.suspectTransportation">Vehicle	info	(if	known)	of	the	suspects	involved</AppControlInput>          
-    <AppControlInput v-model="newPost.victimActivity">What	the	victim	was	doing	at	the	time	of	incident	("Walking",	"Driving",	etc) </AppControlInput>          
-    
-    
-    
-    
-    <AppControlInput v-model="newPost.mainCrimeCode">BRIC classification of crome code for analysis</AppControlInput>       
-    <AppControlInput v-model="newPost.computedCrimeCode"><p>Crime code	determined	by	looking	at	all	of	the	supplements	involved in	the	incident and determining the
-         lowest	crime code. </p> Lower the crime code more serious the crime</AppControlInput>           
-    <AppControlInput
-      control-type="textarea"
-      v-model="newPost.computedCrimeCodeDesc">Textual description of the above crime code</AppControlInput>
-    <a  @click="onSave" class="button is-success">Save</a>
+    <AppControlInput v-model="newPost.xstreetname">Optional - Crosse street	the	incident	took	place</AppControlInput>          
+    <AppControlInput v-model="newPost.weapontype">Detailed	info	on	the	weapon	type	(free	form	ﬁeld)</AppControlInput>          
+    <AppControlInput v-model="newPost.location">location</AppControlInput>          
+    <AppControlInput v-model="newPost.ucrpart">ucrpart</AppControlInput>          
+    <AppControlInput v-model="newPost.day_week">day_week</AppControlInput>          
+    <AppControlInput v-model="newPost.month">month</AppControlInput>          
+    <AppControlInput v-model="newPost.year">year</AppControlInput>          
+    <AppControlInput v-model="newPost.shooting">shooting</AppControlInput>          
+    <AppControlInput v-model="newPost.domestic">domestic</AppControlInput>          
+    <AppControlInput v-model="newPost.x">X	coordinate	(state	plane,	feet)	of	the	geocoded	address	loca6on	(obscured	to	the	street	segment	centroid	for	privacy). </AppControlInput>          
+    <AppControlInput v-model="newPost.y">Y	coordinate	(state	plane,	feet)	of	the	geocoded	address	loca6on(obscured	to	the	street	segment	centroid	for	privacy). </AppControlInput>          
+    <AppControlInput v-model="newPost.naturecode">naturecode</AppControlInput>          
+    <AppControlInput v-model="newPost.shift">shift</AppControlInput>          
+ 
+        
+    <button  class="button is-success" type="submit">Save</button>
     <a
       class="button is-danger"
       type="button"

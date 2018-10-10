@@ -6,7 +6,9 @@ const createStore = () => {
     state: {
       users: [],
       authUser: null,
-      crimes: []
+      crimes: [],
+      nbResult: 0,
+      crimeDetails: null,
     },
     mutations: {
       setUsers: (state, users) => {
@@ -15,13 +17,28 @@ const createStore = () => {
       SetCrimes: (state, crimes) => {
         state.crimes = crimes
       },
+      SetNbResult: (state, nbresult) => {
+        state.nbResult = nbresult
+      },
       removeUser: (state, userid) => {
         let users = state.users.filter((user) => user.id !== userid);
         state.users = users
       },
       setAuthUser: (state, authUser) => {
-        console.log("authUser : ", authUser)
         state.authUser = authUser
+      },
+      SetCrimeDetails: (state, crimeId) => {
+        let crimeDetails = state.crimes.filter((crime) => crime.compnos == crimeId);
+        console.log(crimeDetails[0])
+        state.crimeDetails = crimeDetails[0]
+      },
+      SetDeleteCrime: (state, crimeId) => {
+        let crimes = state.crimes.filter((crime) => crime.id !== crimeId);
+        state.crimes = crimes
+      },
+      AddNewCrime: (state, newCrime) =>
+      {
+        state.crimes.push(newCrime);
       }
     },
     actions: {
@@ -29,16 +46,16 @@ const createStore = () => {
         async nuxtServerInit ({ commit }, {req}) {
           try
           {
-            let {data} = await axios.get('/user/pending')
-            commit('setUsers', data)
-           /* if (req.session && req.session.authUser) {
+            let {data} = await axios.get('http://172.16.25.3:8080/ping')
+            console.log("Serveur Init");
+            if (req.session && req.session.authUser) {
               commit('setAuthUser', req.session.authUser)
-            }
-            */
+              console.log("session");
+            }           
           }
           catch (error)
           {
-            console.error("Can't retrieve users", error.response);
+            console.error("Can't ping server error : ", error.response);
 
           }
         }, 
@@ -46,7 +63,7 @@ const createStore = () => {
         async setUsers ({ commit }) {
           try
           {
-            let {data} = await axios.get(`/user/pending`)
+            let {data} = await axios.get(`http://172.16.25.3:8080/user/pending`)
             commit('setUsers', data)
           }
           catch (error)
@@ -60,7 +77,7 @@ const createStore = () => {
           try
           {
             console.log("fonction login", email, password)
-            let {data} = await axios.post('/login', {email, password})
+            let {data} = await axios.post('http://172.16.25.3:8080/login', {email, password})
             commit('setAuthUser', data)
             let myToast = this.$toast.success('Welcome')
             myToast.goAway(2500); 
@@ -81,7 +98,7 @@ const createStore = () => {
 
           try
           {
-            await axios.get('/logout')
+            await axios.get('http://172.16.25.3:8080/logout')
             commit('setAuthUser', null)
           }
           catch (e)
@@ -97,7 +114,7 @@ const createStore = () => {
         {
           try
           {
-            let {data} = await axios.post('/signin', { last_name: lastname, first_name: firstname, email: email, password: password, rank: rank})
+            let {data} = await axios.post('http://172.16.25.3:8080/signin', { last_name: lastname, first_name: firstname, email: email, password: password, rank: rank})
             this.$router.replace({ path: '\data' })
             let myToast = this.$toast.success('Validation request sent to Chief Police Officer')
             myToast.goAway(2500); 
@@ -116,7 +133,7 @@ const createStore = () => {
           try
           {
 
-            let {data} = await axios.put(`/user/${userid}/status/true`)
+            let {data} = await axios.put(`http://172.16.25.3:8080/user/${userid}/status/true`)
             commit('removeUser', userid);
             let myToast = this.$toast.success('Database has been updated successfully')
             myToast.goAway(1500);         
@@ -133,7 +150,7 @@ const createStore = () => {
           console.log("delete user ", userid)
           try
           {
-            let {data} = await axios.put(`/user/${userid}/status/false`)
+            await axios.put(`http://172.16.25.3:8080/user/${userid}/status/false`)
             commit('removeUser', userid);
             let myToast = this.$toast.success('Database has been updated successfully')
             myToast.goAway(1500);         
@@ -146,8 +163,69 @@ const createStore = () => {
         },
         //set all crimes
         async setCrimes ({ commit }) {
-          let {data} = await axios.get('/data')
-          commit('SetCrimes')
+          try
+          {
+            let {data} = await axios.post('http://172.16.25.3:8080/crime/search', {page: 1})
+            commit('SetCrimes', data.results)
+            commit('SetNbResult', data.nb_result)
+          }
+          catch (e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);         
+          }
+        },
+        async setCrimeDetails ({ commit }, { crimeId })
+        {
+          try
+          {
+            commit('SetCrimeDetails', crimeId) 
+          }
+          catch(e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);   
+          }          
+        },
+        async deleteCrime ({ commit }, { crimeId })
+        {
+          try
+          {
+            let data = await axios.delete(`http://172.16.25.3:8080/crime/${crimeId}`)
+            commit('SetDeleteCrime', crimeId) 
+          }
+          catch(e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);   
+          }          
+        },
+        async postNewCrime ({ commit }, { newCrime })
+        {
+          try
+          {
+            let data = await axios.post(`http://172.16.25.3:8080/crime`, {newCrime} )
+            this.$router.push("/data")
+            commit('AddNewCrime', newCrime) 
+          }
+          catch(e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);   
+          }          
+        },
+        async exportUsers ({ commit })
+        {
+          try
+          {
+           let data = await axios.get(`http://172.16.25.3:8080/user/export`)
+           console.log(data);
+          }
+          catch(e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);    
+          }
         }
     }
   })
