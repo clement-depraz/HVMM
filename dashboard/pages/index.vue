@@ -12,14 +12,18 @@
           </h2>
 
           <div>
-            <div class="columns">
-               <div class="column is-1 is-offset-4">
+            <div v-if="!$store.state.authUser" class="columns">
+
+              <div class="column is-1 is-offset-4">
                 <router-link class="button is-dark" to="/login" tag="button">LOGIN</router-link>
-               </div>            
+              </div>            
               <div class="column is-4 ">
                 <router-link class="button is-dark" to="/register" tag="button">REGISTER</router-link>
               </div>
 
+            </div>
+            <div v-else>
+              <h1 class="subtitle">Welcome {{$store.state.authUser.first_name}} {{$store.state.authUser.last_name}} </h1> 
             </div>
           </div>
         </div>

@@ -34,9 +34,8 @@
 
                         <nuxt-link class="navbar-item" to="/data">Dashboard</nuxt-link>
 
-                        <nuxt-link class="navbar-item" to="/admin">Admin</nuxt-link>        
+                        <nuxt-link v-if="$store.state.authUser.rank === 1" class="navbar-item" to="/admin">Admin</nuxt-link>        
                     </div>
-<!-- v-if="$store.state.authUser.isAdmin" -->
                 </div>
             </div>
             <nav class="navbar is-dark">
