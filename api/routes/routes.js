@@ -85,7 +85,7 @@ module.exports = [{
     }
 }, {
     method: 'GET',
-    path: '/user/export',
+    path: '/user/export.csv',
     handler: controller.user.exportToCSV,
     options: {
         auth: {

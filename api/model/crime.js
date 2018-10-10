@@ -1,4 +1,5 @@
 'use strict';
+
 const Axios = require('axios');
 const Boom = require('boom');
 const RequireDir = require('require-directory');
@@ -52,16 +53,16 @@ module.exports = {
             baseURL: Config.env.microservices.search_crime,
             timeout: 4000
         });
-        let params = {
+        const params = {
             page: payload.page - 1,
             filters: payload
         };
         delete params.filters.page;
         return new Promise((resolve, reject) => {
-            instance.post("/search", params)
-                .then(function (response) {
+            instance.post('/search', params)
+                .then((response) => {
                     resolve(response.data);
-                }).catch(function (error) {
+                }).catch((error) => {
                     if (error.response) {
                         const data = error.response.data;
                         resolve(Boom.badRequest(data[Object.keys(data)[0]]));

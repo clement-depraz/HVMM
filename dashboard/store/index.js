@@ -1,6 +1,10 @@
 import Vuex from 'vuex'
 import axios from "axios"
 
+const Hapi = axios.create({
+  baseURL: 'http://192.168.0.36:8080'
+});
+
 const createStore = () => {
   return new Vuex.Store({
     state: {
@@ -29,7 +33,7 @@ const createStore = () => {
         async nuxtServerInit ({ commit }, {req}) {
           try
           {
-            let {data} = await axios.get('/user/pending')
+            let {data} = await Hapi.get('/ping')
             commit('setUsers', data)
            /* if (req.session && req.session.authUser) {
               commit('setAuthUser', req.session.authUser)
@@ -46,7 +50,7 @@ const createStore = () => {
         async setUsers ({ commit }) {
           try
           {
-            let {data} = await axios.get(`/user/pending`)
+            let {data} = await Hapi.get(`/user/pending`)
             commit('setUsers', data)
           }
           catch (error)
@@ -60,7 +64,7 @@ const createStore = () => {
           try
           {
             console.log("fonction login", email, password)
-            let {data} = await axios.post('/login', {email, password})
+            let {data} = await Hapi.post('/login', {email, password})
             commit('setAuthUser', data)
             let myToast = this.$toast.success('Welcome')
             myToast.goAway(2500); 
@@ -81,7 +85,7 @@ const createStore = () => {
 
           try
           {
-            await axios.get('/logout')
+            await Hapi.get('/logout')
             commit('setAuthUser', null)
           }
           catch (e)
@@ -97,7 +101,7 @@ const createStore = () => {
         {
           try
           {
-            let {data} = await axios.post('/signin', { last_name: lastname, first_name: firstname, email: email, password: password, rank: rank})
+            let {data} = await Hapi.post('/signin', { last_name: lastname, first_name: firstname, email: email, password: password, rank: rank})
             this.$router.replace({ path: '\data' })
             let myToast = this.$toast.success('Validation request sent to Chief Police Officer')
             myToast.goAway(2500); 
@@ -116,7 +120,7 @@ const createStore = () => {
           try
           {
 
-            let {data} = await axios.put(`/user/${userid}/status/true`)
+            let {data} = await Hapi.put(`/user/${userid}/status/true`)
             commit('removeUser', userid);
             let myToast = this.$toast.success('Database has been updated successfully')
             myToast.goAway(1500);         
@@ -133,7 +137,7 @@ const createStore = () => {
           console.log("delete user ", userid)
           try
           {
-            let {data} = await axios.put(`/user/${userid}/status/false`)
+            let {data} = await Hapi.put(`/user/${userid}/status/false`)
             commit('removeUser', userid);
             let myToast = this.$toast.success('Database has been updated successfully')
             myToast.goAway(1500);         
@@ -146,7 +150,7 @@ const createStore = () => {
         },
         //set all crimes
         async setCrimes ({ commit }) {
-          let {data} = await axios.get('/data')
+          let {data} = await Hapi.get('/data')
           commit('SetCrimes')
         }
     }

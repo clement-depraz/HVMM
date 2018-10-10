@@ -34,12 +34,6 @@ module.exports = {
   },
 
   /*
-  **Define API REST EndPoint
-  */
-  axios: {
-    baseURL: 'http://192.168.1.24:8080',
-  },
-  /*
   ** Import css for the Project
   */
   css: [
