@@ -3,8 +3,7 @@
 
         <section class="section">
             <div >
-                <div class="columns">
-                    <div class="column is-4 is-offset-4">
+
                         <h1 class="subtitle">
                             Crimes and offenses                      
                         </h1>
@@ -14,7 +13,6 @@
                             <th>COMPNOS</th>
                             <th>Incident Type</th>
                             <th>Reporting District</th>
-                            <th>Rept District</th>
                             <th>Weapon Type</th>
                             <th>Domestic</th>
                             <th>Shooting</th>
@@ -22,15 +20,15 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <UserListRow
+                        <CrimeListRow
                             v-for="crime in Crimes"
                             :key="crime.compnos"
                             :crime="crime"
-                            @details="crimeDetails"/>
+                            @details="crimeDetails"
+                            @delete="crimeDelete"/>
                         </tbody>
                     </table>
-                    </div>
-                </div>
+
             </div>
         </section>
 
@@ -48,16 +46,24 @@ export default {
     async fetch ({store}) {
           await store.dispatch('setCrimes')
     },
-  middleware: 'auth',
+    //middleware: 'auth',
     computed: {
       Crimes () {
         return this.$store.state.crimes
       }
     },
     methods: {
-        crimeDetails(userId) {
-            console.log('crimeDetails');
-            
+        crimeDetails(crimeId) {
+        this.$store.dispatch({
+          type: 'setCrimeDetails',
+          crimeId: crimeId
+            })         
+        },
+        crimeDelete(crimeId) {
+        this.$store.dispatch({
+          type: 'deleteCrime',
+          crimeId: crimeId
+            })         
         }
     },
 }

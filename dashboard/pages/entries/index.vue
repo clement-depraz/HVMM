@@ -20,15 +20,13 @@ export default {
   },
     methods: {
     onSubmitted(postData) {
-      /*
-      this.$store.dispatch("addPost", postData).then(() => {
-        this.$router.push("/data");
-       
-      }); */
-      console.log("submit")
-       this.$router.push("/data")
+      this.$store.dispatch({
+          type: 'postNewCrime',
+          newCrime: postData
+          }),
+      console.log(postData)
     }
   },
-  middleware: 'auth'
+  //middleware: 'auth'
 };
 </script>

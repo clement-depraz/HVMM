@@ -8,6 +8,7 @@ const createStore = () => {
       authUser: null,
       crimes: [],
       nbResult: 0,
+      crimeDetails: null,
     },
     mutations: {
       setUsers: (state, users) => {
@@ -25,6 +26,19 @@ const createStore = () => {
       },
       setAuthUser: (state, authUser) => {
         state.authUser = authUser
+      },
+      SetCrimeDetails: (state, crimeId) => {
+        let crimeDetails = state.crimes.filter((crime) => crime.compnos == crimeId);
+        console.log(crimeDetails[0])
+        state.crimeDetails = crimeDetails[0]
+      },
+      SetDeleteCrime: (state, crimeId) => {
+        let crimes = state.crimes.filter((crime) => crime.id !== crimeId);
+        state.crimes = crimes
+      },
+      AddNewCrime: (state, newCrime) =>
+      {
+        state.crimes.push(newCrime);
       }
     },
     actions: {
@@ -136,7 +150,7 @@ const createStore = () => {
           console.log("delete user ", userid)
           try
           {
-            let {data} = await axios.put(`http://172.16.25.3:8080/user/${userid}/status/false`)
+            await axios.put(`http://172.16.25.3:8080/user/${userid}/status/false`)
             commit('removeUser', userid);
             let myToast = this.$toast.success('Database has been updated successfully')
             myToast.goAway(1500);         
@@ -151,7 +165,7 @@ const createStore = () => {
         async setCrimes ({ commit }) {
           try
           {
-            let {data} = await axios.get('http://172.16.25.3:8080/crime/search')
+            let {data} = await axios.post('http://172.16.25.3:8080/crime/search', {page: 1})
             commit('SetCrimes', data.results)
             commit('SetNbResult', data.nb_result)
           }
@@ -159,6 +173,58 @@ const createStore = () => {
           {
             let myToast = this.$toast.error(e)
             myToast.goAway(1500);         
+          }
+        },
+        async setCrimeDetails ({ commit }, { crimeId })
+        {
+          try
+          {
+            commit('SetCrimeDetails', crimeId) 
+          }
+          catch(e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);   
+          }          
+        },
+        async deleteCrime ({ commit }, { crimeId })
+        {
+          try
+          {
+            let data = await axios.delete(`http://172.16.25.3:8080/crime/${crimeId}`)
+            commit('SetDeleteCrime', crimeId) 
+          }
+          catch(e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);   
+          }          
+        },
+        async postNewCrime ({ commit }, { newCrime })
+        {
+          try
+          {
+            let data = await axios.post(`http://172.16.25.3:8080/crime`, {newCrime} )
+            this.$router.push("/data")
+            commit('AddNewCrime', newCrime) 
+          }
+          catch(e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);   
+          }          
+        },
+        async exportUsers ({ commit })
+        {
+          try
+          {
+           let data = await axios.get(`http://172.16.25.3:8080/user/export`)
+           console.log(data);
+          }
+          catch(e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);    
           }
         }
     }

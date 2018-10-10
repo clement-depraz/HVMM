@@ -8,10 +8,11 @@
         <td>{{ crime.shooting }}</td>
         <td>{{ crime.fromdate }}</td>
         <td>
-            <a @click="onDetailsClick" class="button is-success">Details</a>
+       <!--        <a @click="onDetailsClick" class="button is-success">Details</a> -->
+         <nuxt-link :to="'/data/'+crime.compnos" class="button is-info">Details</nuxt-link>   
         </td>
         <td>
-            <a @click="onDeleteClick" class="button is-success">Delete</a>
+            <a @click="onDeleteClick" class="button is-danger">Delete</a>
         </td>
     </tr>
 </template>
