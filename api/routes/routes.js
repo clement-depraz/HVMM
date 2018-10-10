@@ -88,10 +88,9 @@ module.exports = [{
     path: '/user/export',
     handler: controller.user.exportToCSV,
     options: {
-        // auth: {
-        //     scope: 'chef'
-        // },
-        auth: false,
+        auth: {
+            scope: 'chef'
+        },
         tags: ['api', 'user']
     }
 }, {
