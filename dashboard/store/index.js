@@ -10,7 +10,9 @@ const createStore = () => {
     state: {
       users: [],
       authUser: null,
-      crimes: []
+      crimes: [],
+      nbResult: 0,
+      crimeDetails: null,
     },
     mutations: {
       setUsers: (state, users) => {
@@ -19,13 +21,28 @@ const createStore = () => {
       SetCrimes: (state, crimes) => {
         state.crimes = crimes
       },
+      SetNbResult: (state, nbresult) => {
+        state.nbResult = nbresult
+      },
       removeUser: (state, userid) => {
         let users = state.users.filter((user) => user.id !== userid);
         state.users = users
       },
       setAuthUser: (state, authUser) => {
-        console.log("authUser : ", authUser)
         state.authUser = authUser
+      },
+      SetCrimeDetails: (state, crimeId) => {
+        let crimeDetails = state.crimes.filter((crime) => crime.compnos == crimeId);
+        console.log(crimeDetails[0])
+        state.crimeDetails = crimeDetails[0]
+      },
+      SetDeleteCrime: (state, crimeId) => {
+        let crimes = state.crimes.filter((crime) => crime.id !== crimeId);
+        state.crimes = crimes
+      },
+      AddNewCrime: (state, newCrime) =>
+      {
+        state.crimes.push(newCrime);
       }
     },
     actions: {
@@ -34,15 +51,15 @@ const createStore = () => {
           try
           {
             let {data} = await Hapi.get('/ping')
-            commit('setUsers', data)
-           /* if (req.session && req.session.authUser) {
+            console.log("Serveur Init");
+            if (req.session && req.session.authUser) {
               commit('setAuthUser', req.session.authUser)
-            }
-            */
+              console.log("session");
+            }           
           }
           catch (error)
           {
-            console.error("Can't retrieve users", error.response);
+            console.error("Can't ping server error : ", error.response);
 
           }
         }, 
@@ -137,7 +154,7 @@ const createStore = () => {
           console.log("delete user ", userid)
           try
           {
-            let {data} = await Hapi.put(`/user/${userid}/status/false`)
+            await Hapi.put(`/user/${userid}/status/false`)
             commit('removeUser', userid);
             let myToast = this.$toast.success('Database has been updated successfully')
             myToast.goAway(1500);         
@@ -150,8 +167,69 @@ const createStore = () => {
         },
         //set all crimes
         async setCrimes ({ commit }) {
-          let {data} = await Hapi.get('/data')
-          commit('SetCrimes')
+          try
+          {
+            let {data} = await Hapi.post('/crime/search', {page: 1})
+            commit('SetCrimes', data.results)
+            commit('SetNbResult', data.nb_result)
+          }
+          catch (e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);         
+          }
+        },
+        async setCrimeDetails ({ commit }, { crimeId })
+        {
+          try
+          {
+            commit('SetCrimeDetails', crimeId) 
+          }
+          catch(e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);   
+          }          
+        },
+        async deleteCrime ({ commit }, { crimeId })
+        {
+          try
+          {
+            let data = await Hapi.delete(`/crime/${crimeId}`)
+            commit('SetDeleteCrime', crimeId) 
+          }
+          catch(e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);   
+          }          
+        },
+        async postNewCrime ({ commit }, { newCrime })
+        {
+          try
+          {
+            let data = await Hapi.post(`/crime`, {newCrime} )
+            this.$router.push("/data")
+            commit('AddNewCrime', newCrime) 
+          }
+          catch(e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);   
+          }          
+        },
+        async exportUsers ({ commit })
+        {
+          try
+          {
+           let data = await Hapi.get(`/user/export`)
+           console.log(data);
+          }
+          catch(e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);    
+          }
         }
     }
   })

@@ -6,6 +6,9 @@
                     Admin Page
                 
                 </h1>
+
+              <a @click="onExportUser" class="button is-dark">Export All Users</a>
+
                 <table class="table table-striped ">
                 <thead>
                   <tr>
@@ -19,7 +22,7 @@
                 <tbody>
                   <UserListRow
                     v-for="user in Users"
-                    :key="user.id"
+                    :key="user.compnos"
                     :user="user"
                     @validate="validateUser"
                     @delete="deleteUser"/>
@@ -42,7 +45,7 @@ export default {
     async fetch ({store}) {
           await store.dispatch('setUsers')
     },
-    middleware: 'authAdmin',
+    //middleware: 'authAdmin',
     computed: {
       Users () {
         return this.$store.state.users
@@ -60,7 +63,13 @@ export default {
           type: 'deleteUser',
           userid: userId
         })
-    },   
+    },
+    onExportUser()
+    {
+      this.$store.dispatch({
+        type: 'exportUsers'
+      })
+    }
   }
 }
 
