@@ -28,7 +28,7 @@ module.exports = {
         });
     },
     getValidatedUser(email, password) {
-        const sql = 'SELECT u.id, u.first_name, u.last_name, u.email, u.password, r.label as rankLabel, r.id as rank'
+        const sql = 'SELECT u.id, u.first_name, u.last_name, u.email, r.label as rankLabel, r.id as rank'
         + ' FROM users u INNER JOIN rank r ON r.id = u.rank'
         + ' WHERE u.isCertified = 1 AND u.email = ? AND u.password = ?;';
 
@@ -41,7 +41,6 @@ module.exports = {
                 let userResult = null;
                 if (userResults.length === 1) {
                     userResult = userResults[0];
-                    delete userResult.password;
                     userResult.scope = ['chef', 'detective', 'agent'].slice(userResult.rank - 1);
                 }
 

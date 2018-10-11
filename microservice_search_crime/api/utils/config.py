@@ -4,12 +4,12 @@ class Config(object):
 
 
 class ProductionConfig(Config):
-    MONGO_URI = 'mongodb://admin:admin@mongodb:27017/crime_reports'
+    MONGO_URI = 'mongodb://mongodb:27017/crime_reports'
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    MONGO_URI = 'mongodb://admin:admin@mongodb:27017/crime_reports'
+    MONGO_URI = 'mongodb://mongodb:27017/crime_reports'
 
 
 class TestingConfig(Config):
