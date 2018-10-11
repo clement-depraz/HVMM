@@ -11,7 +11,7 @@ const createStore = () => {
       users: [],
       authUser: null,
       crimes: [],
-      nbResult: 0,
+      currentPage: 1,
       crimeDetails: null,
     },
     mutations: {
@@ -21,8 +21,8 @@ const createStore = () => {
       SetCrimes: (state, crimes) => {
         state.crimes = crimes
       },
-      SetNbResult: (state, nbresult) => {
-        state.nbResult = nbresult
+      SetCurrentPage: (state, currentPage) => {
+        state.currentPage = currentPage
       },
       removeUser: (state, userid) => {
         let users = state.users.filter((user) => user.id !== userid);
@@ -49,6 +49,8 @@ const createStore = () => {
         state.crimes.push(newCrime);
       }
     },
+
+    
     actions: {
         //method called at the server initialization
         async nuxtServerInit ({ commit }, {req}) {
@@ -61,9 +63,9 @@ const createStore = () => {
               commit('setAuthUser', req.session.authUser)
               console.log("session");
             }  
-            data = await Hapi.get('/crime/search', {page: 1})
-            commit('SetCrimes', data.results)
-            commit('SetNbResult', data.nb_result)
+            //data = await axios.get('http://192.168.1.24:8080/crime/search', {page: 1})
+            //commit('SetCrimes', data.results)
+            //commit('SetNbResult', data.nb_result)
                      
           }
           catch (error)
@@ -180,7 +182,7 @@ const createStore = () => {
           {
             let {data} = await Hapi.post('/crime/search', {page: 1})
             commit('SetCrimes', data.results)
-            commit('SetNbResult', data.nb_result)
+            //commit('SetNbResult', data.nb_result)
           }
           catch (e)
           {
@@ -193,7 +195,7 @@ const createStore = () => {
         {
           try
           {
-            console.log(compnos)
+            console.log(page)
             let {data} = await Hapi.post('/crime/search', 
             {
               ...(compnos && {compnos}),
@@ -205,7 +207,7 @@ const createStore = () => {
               ...(fromDate && {fromdate: fromDate}),
               page })
             commit('SetCrimes', data.results)
-            commit('SetNbResult', data.nb_result)
+            commit('SetCurrentPage', data.page)
           }
           catch (e)
           {
