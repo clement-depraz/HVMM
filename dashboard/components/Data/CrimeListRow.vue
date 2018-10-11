@@ -15,6 +15,7 @@
             <a @click="onDeleteClick" class="button is-danger">Delete</a>
         </td>
     </tr>
+    
 </template>
 <script>
 export default {

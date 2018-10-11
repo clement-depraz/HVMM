@@ -28,8 +28,12 @@ const createStore = () => {
         state.authUser = authUser
       },
       SetCrimeDetails: (state, crimeId) => {
-        let crimeDetails = state.crimes.filter((crime) => crime.compnos == crimeId);
-        console.log(crimeDetails[0])
+        var crimeDetails = state.crimes.filter((crime) => crime.compnos == crimeId);
+        console.log(crimeDetails)
+        if ((crimeDetails === undefined) || (crimeDetails === null)) {
+          console.log("crimeDetails undefined")
+          throw new Error
+        }
         state.crimeDetails = crimeDetails[0]
       },
       SetDeleteCrime: (state, crimeId) => {
@@ -46,12 +50,17 @@ const createStore = () => {
         async nuxtServerInit ({ commit }, {req}) {
           try
           {
-            let {data} = await axios.get('http://172.16.25.3:8080/ping')
+            
+            let {data} = await axios.get('http://192.168.1.24:8080/ping')
             console.log("Serveur Init");
             if (req.session && req.session.authUser) {
               commit('setAuthUser', req.session.authUser)
               console.log("session");
-            }           
+            }  
+            data = await axios.post('http://192.168.1.24:8080/crime/search', {page: 1})
+            commit('SetCrimes', data.results)
+            commit('SetNbResult', data.nb_result)
+                     
           }
           catch (error)
           {
@@ -63,7 +72,7 @@ const createStore = () => {
         async setUsers ({ commit }) {
           try
           {
-            let {data} = await axios.get(`http://172.16.25.3:8080/user/pending`)
+            let {data} = await axios.get(`http://192.168.1.24:8080/user/pending`)
             commit('setUsers', data)
           }
           catch (error)
@@ -77,7 +86,7 @@ const createStore = () => {
           try
           {
             console.log("fonction login", email, password)
-            let {data} = await axios.post('http://172.16.25.3:8080/login', {email, password})
+            let {data} = await axios.post('http://192.168.1.24:8080/login', {email, password})
             commit('setAuthUser', data)
             let myToast = this.$toast.success('Welcome')
             myToast.goAway(2500); 
@@ -98,8 +107,10 @@ const createStore = () => {
 
           try
           {
-            await axios.get('http://172.16.25.3:8080/logout')
+            await axios.get('http://192.168.1.24:8080/logout')
             commit('setAuthUser', null)
+            this.$router.replace({ path: '/' })
+
           }
           catch (e)
           {
@@ -114,7 +125,7 @@ const createStore = () => {
         {
           try
           {
-            let {data} = await axios.post('http://172.16.25.3:8080/signin', { last_name: lastname, first_name: firstname, email: email, password: password, rank: rank})
+            let {data} = await axios.post('http://192.168.1.24:8080/signin', { last_name: lastname, first_name: firstname, email: email, password: password, rank: rank})
             this.$router.replace({ path: '\data' })
             let myToast = this.$toast.success('Validation request sent to Chief Police Officer')
             myToast.goAway(2500); 
@@ -133,7 +144,7 @@ const createStore = () => {
           try
           {
 
-            let {data} = await axios.put(`http://172.16.25.3:8080/user/${userid}/status/true`)
+            let {data} = await axios.put(`http://192.168.1.24:8080/user/${userid}/status/true`)
             commit('removeUser', userid);
             let myToast = this.$toast.success('Database has been updated successfully')
             myToast.goAway(1500);         
@@ -150,7 +161,7 @@ const createStore = () => {
           console.log("delete user ", userid)
           try
           {
-            await axios.put(`http://172.16.25.3:8080/user/${userid}/status/false`)
+            await axios.put(`http://192.168.1.24:8080/user/${userid}/status/false`)
             commit('removeUser', userid);
             let myToast = this.$toast.success('Database has been updated successfully')
             myToast.goAway(1500);         
@@ -165,7 +176,7 @@ const createStore = () => {
         async setCrimes ({ commit }) {
           try
           {
-            let {data} = await axios.post('http://172.16.25.3:8080/crime/search', {page: 1})
+            let {data} = await axios.post('http://192.168.1.24:8080/crime/search', {page: 1})
             commit('SetCrimes', data.results)
             commit('SetNbResult', data.nb_result)
           }
@@ -191,7 +202,7 @@ const createStore = () => {
         {
           try
           {
-            let data = await axios.delete(`http://172.16.25.3:8080/crime/${crimeId}`)
+            let data = await axios.delete(`http://192.168.1.24:8080/crime/${crimeId}`)
             commit('SetDeleteCrime', crimeId) 
           }
           catch(e)
@@ -204,7 +215,7 @@ const createStore = () => {
         {
           try
           {
-            let data = await axios.post(`http://172.16.25.3:8080/crime`, {newCrime} )
+            let data = await axios.post(`http://192.168.1.24:8080/crime`, {newCrime} )
             this.$router.push("/data")
             commit('AddNewCrime', newCrime) 
           }
@@ -218,7 +229,7 @@ const createStore = () => {
         {
           try
           {
-           let data = await axios.get(`http://172.16.25.3:8080/user/export`)
+           let data = await axios.get(`http://192.168.1.24:8080/user/export`)
            console.log(data);
           }
           catch(e)
