@@ -169,8 +169,8 @@ module.exports = [{
                 incident_type_description: Joi.string(),
                 reptdistrict: Joi.string(),
                 weapontype: Joi.string(),
-                domestic: Joi.boolean().truthy(1, true).falsy(0, false),
-                shooting: Joi.boolean().truthy(1, true).falsy(0, false),
+                domestic: Joi.boolean().truthy(1, 'true', true).falsy(0, 'false', false),
+                shooting: Joi.boolean().truthy(1, 'true', true).falsy(0, 'false', false),
                 fromdate: Joi.string(),
                 page: Joi.number().integer().required().positive().example(1)
             }

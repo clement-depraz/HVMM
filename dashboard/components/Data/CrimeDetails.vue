@@ -52,7 +52,7 @@
                 <strong>From Date:</strong>
                 </div>
                 <div class="col-md-3">
-                {{ crime.fromdate }}
+                {{ new Date(crime.fromdate['$date']).toLocaleString() }}
                 </div>
             </div>
 
