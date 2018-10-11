@@ -44,7 +44,7 @@
                             </div>
 
                               <div class="panel-block">
-                                <button class="button is-link is-outlined is-fullwidth" @click="searchFilters">
+                                <button class="button is-link is-outlined is-fullwidth" @click="searchFilters ">
                                     Apply research filters
                                 </button>
                             </div>

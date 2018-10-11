@@ -2,7 +2,7 @@
 <div>
 
     <div>
-    <h1 class="subtitle is-centered">Details for the crime {{ Crime.compnos }}</h1>
+    <h1 class="subtitle is-centered">Details for crime {{ Crime.compnos }}</h1>
       <CrimeDetails :crime="Crime"/>
     </div>
 </div>
@@ -29,10 +29,6 @@ export default {
     computed: {
       Crime () {
         let Crime = this.$store.state.crimeDetails
-        console.log(Crime)
-        if (Crime === undefined) {
-            this.$router.replace({ path: '/' })
-          }
         return Crime
         }
     },
