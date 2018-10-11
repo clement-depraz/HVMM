@@ -2,7 +2,7 @@ import Vuex from 'vuex'
 import axios from "axios"
 
 const Hapi = axios.create({
-  baseURL: 'http://192.168.0.36:8080'
+  baseURL: 'http://192.168.1.24:8080'
 });
 
 const createStore = () => {
@@ -32,8 +32,12 @@ const createStore = () => {
         state.authUser = authUser
       },
       SetCrimeDetails: (state, crimeId) => {
-        let crimeDetails = state.crimes.filter((crime) => crime.compnos == crimeId);
-        console.log(crimeDetails[0])
+        var crimeDetails = state.crimes.filter((crime) => crime.compnos == crimeId);
+        console.log(crimeDetails)
+        if ((crimeDetails === undefined) || (crimeDetails === null)) {
+          console.log("crimeDetails undefined")
+          throw new Error
+        }
         state.crimeDetails = crimeDetails[0]
       },
       SetDeleteCrime: (state, crimeId) => {
@@ -50,19 +54,24 @@ const createStore = () => {
         async nuxtServerInit ({ commit }, {req}) {
           try
           {
+            
             let {data} = await Hapi.get('/ping')
             console.log("Serveur Init");
             if (req.session && req.session.authUser) {
               commit('setAuthUser', req.session.authUser)
               console.log("session");
-            }           
+            }  
+            data = await Hapi.get('/crime/search', {page: 1})
+            commit('SetCrimes', data.results)
+            commit('SetNbResult', data.nb_result)
+                     
           }
           catch (error)
           {
             console.error("Can't ping server error : ", error.response);
 
           }
-        }, 
+        },
         //Load users for admin page
         async setUsers ({ commit }) {
           try
@@ -93,7 +102,6 @@ const createStore = () => {
             let myToast = this.$toast.error(e)
             myToast.goAway(1500); 
           }
-
         },
         //Logout app user
         async logout ({ commit })
@@ -104,6 +112,8 @@ const createStore = () => {
           {
             await Hapi.get('/logout')
             commit('setAuthUser', null)
+            this.$router.replace({ path: '/' })
+
           }
           catch (e)
           {
@@ -112,7 +122,6 @@ const createStore = () => {
             myToast.goAway(1500); 
           }
         },
-
         //Register user
         async register ({ commit }, { firstname, lastname, rank, email, password })
         {
@@ -179,6 +188,25 @@ const createStore = () => {
             myToast.goAway(1500);         
           }
         },
+        //Apply filters to crimes research
+        async searchCrimesFilter ({ commit}, { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate })
+        {
+          try
+          {
+            console.log(compnos)
+            let {data} = await Hapi.post('/crime/search', 
+            { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate })
+            // Il manque la page dans les données envoyées =)
+            commit('SetCrimes', data.results)
+            commit('SetNbResult', data.nb_result)
+          }
+          catch (e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);         
+          }
+
+        },
         async setCrimeDetails ({ commit }, { crimeId })
         {
           try
@@ -244,5 +272,4 @@ const createStore = () => {
     }
   })
 }
-
 export default createStore

@@ -1,11 +1,10 @@
 <template>
 <div>
-  <section class="container">
+
     <div>
-    <h1 class="subtitle is-centered">Details for the crime {{ Crime.compnos }}</h1>
+    <h1 class="subtitle is-centered">Details for crime {{ Crime.compnos }}</h1>
       <CrimeDetails :crime="Crime"/>
     </div>
-  </section>
 </div>
 </template>
 
@@ -29,7 +28,8 @@ export default {
     },
     computed: {
       Crime () {
-        return this.$store.state.crimeDetails
+        let Crime = this.$store.state.crimeDetails
+        return Crime
         }
     },
 }
