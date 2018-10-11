@@ -11,7 +11,7 @@ const createStore = () => {
       users: [],
       authUser: null,
       crimes: [],
-      nbResult: 0,
+      nbPages: ["1", "2", "2"],
       crimeDetails: null,
     },
     mutations: {
@@ -22,7 +22,7 @@ const createStore = () => {
         state.crimes = crimes
       },
       SetNbResult: (state, nbresult) => {
-        state.nbResult = nbresult
+        state.nbPages = nbresult
       },
       removeUser: (state, userid) => {
         let users = state.users.filter((user) => user.id !== userid);
@@ -49,6 +49,8 @@ const createStore = () => {
         state.crimes.push(newCrime);
       }
     },
+
+    
     actions: {
         //method called at the server initialization
         async nuxtServerInit ({ commit }, {req}) {
@@ -61,9 +63,9 @@ const createStore = () => {
               commit('setAuthUser', req.session.authUser)
               console.log("session");
             }  
-            data = await Hapi.get('/crime/search', {page: 1})
-            commit('SetCrimes', data.results)
-            commit('SetNbResult', data.nb_result)
+            //data = await axios.get('http://192.168.1.24:8080/crime/search', {page: 1})
+            //commit('SetCrimes', data.results)
+            //commit('SetNbResult', data.nb_result)
                      
           }
           catch (error)
@@ -175,7 +177,7 @@ const createStore = () => {
           }
         },
         //set all crimes
-        async setCrimes ({ commit }) {
+        async setCrimes ({ commit }, {pageNumber}) {
           try
           {
             let {data} = await Hapi.post('/crime/search', {page: 1})
@@ -198,7 +200,7 @@ const createStore = () => {
             { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate })
             // Il manque la page dans les données envoyées =)
             commit('SetCrimes', data.results)
-            commit('SetNbResult', data.nb_result)
+            //commit('SetNbResult', data.nb_result)
           }
           catch (e)
           {

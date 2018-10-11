@@ -72,6 +72,11 @@
                                     @delete="crimeDelete"/>
                                 </tbody>
                             </table>
+                             <ul class="pagination-list">
+                                <Pagination v-for="page in Pages"
+                                    :key="page"
+                                    :page="page"/>
+                            </ul>
                         </div>
                              <div class="column">
                             <div >
@@ -88,10 +93,13 @@
 
 <script>
 import CrimeListRow from '~/components/Data/CrimeListRow.vue'
+import Pagination from '~/components/UI/Pagination.vue'
+
 
 export default {
   components: {
-    CrimeListRow
+    CrimeListRow,
+    Pagination
     },
     async fetch ({store}) {
           await store.dispatch('setCrimes')
@@ -111,6 +119,9 @@ export default {
     computed: {
       Crimes () {
         return this.$store.state.crimes
+      },
+      Pages () {
+          return this.$store.state.nbPages
       }
     },
     methods: {
