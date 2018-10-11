@@ -82,24 +82,11 @@ def response_with(response, value=None, message=None, error=None, headers={}, pa
 LIMIT = 10
 
 def get_paginated_list(queryset, url, page):
-    # check if page exists
     count = len(queryset)
-    # make response
+
     obj = {}
-    obj['start'] = page * LIMIT
-    obj['limit'] = LIMIT
     obj['nb_result'] = count
-    # make URLs
-    # make previous url
-    if page == 0:
-        obj['previous'] = ''
-    else:
-        obj['previous'] = url + '?page=%d' % (page - 1)
-    # make next url
-    if ((page+1) * LIMIT) > count:
-        obj['next'] = ''
-    else:
-        obj['next'] = url + '?page=%d' % (page + 1)
-    # finally extract result according to bounds
+    obj['page'] = page + 1
+    obj['page_max'] = (count // LIMIT) + 1
     obj['results'] = queryset[(page * LIMIT):((page + 1) * LIMIT)]
     return obj

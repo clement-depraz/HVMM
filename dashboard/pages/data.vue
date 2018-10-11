@@ -151,7 +151,11 @@ export default {
                 domestic: this.domestic,
                 shooting: this.shooting,
                 fromDate: this.fromDate,
+<<<<<<< HEAD
                 page: page
+=======
+                page: 1
+>>>>>>> 4ded3f3038ed08765fb2a60349efd7f53c4c93db
             })
         }
     },

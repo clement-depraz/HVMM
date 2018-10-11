@@ -197,8 +197,20 @@ const createStore = () => {
           {
             console.log(page)
             let {data} = await Hapi.post('/crime/search', 
+<<<<<<< HEAD
             { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate, page})
             // Il manque la page dans les données envoyées =)
+=======
+            {
+              ...(compnos && {compnos}),
+              ...(incidentType && {incident_type_description: incidentType}),
+              ...(reptDist && {reptdistrict: reptDist}),
+              ...(weaponType && {weapontype: weaponType}),
+              ...(domestic && {domestic}),
+              ...(shooting && {shooting}),
+              ...(fromDate && {fromdate: fromDate}),
+              page })
+>>>>>>> 4ded3f3038ed08765fb2a60349efd7f53c4c93db
             commit('SetCrimes', data.results)
             commit('SetCurrentPage', data.page)
           }
