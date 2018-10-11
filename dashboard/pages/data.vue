@@ -44,7 +44,7 @@
                             </div>
 
                               <div class="panel-block">
-                                <button class="button is-link is-outlined is-fullwidth" @click="searchFilters(CurrentPage)">
+                                <button class="button is-link is-outlined is-fullwidth" @click="searchFilters(1)">
                                     Apply research filters
                                 </button>
                             </div>
@@ -151,11 +151,7 @@ export default {
                 domestic: this.domestic,
                 shooting: this.shooting,
                 fromDate: this.fromDate,
-<<<<<<< HEAD
                 page: page
-=======
-                page: 1
->>>>>>> 4ded3f3038ed08765fb2a60349efd7f53c4c93db
             })
         }
     },
