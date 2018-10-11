@@ -44,7 +44,7 @@
                             </div>
 
                               <div class="panel-block">
-                                <button class="button is-link is-outlined is-fullwidth" @click="searchFilters ">
+                                <button class="button is-link is-outlined is-fullwidth" @click="searchFilters(CurrentPage)">
                                     Apply research filters
                                 </button>
                             </div>
@@ -72,11 +72,11 @@
                                     @delete="crimeDelete"/>
                                 </tbody>
                             </table>
-                             <ul class="pagination-list">
-                                <Pagination v-for="page in Pages"
-                                    :key="page"
-                                    :page="page"/>
-                            </ul>
+                            <ul class="pagination-list">
+                                <a @click="searchFilters(PreviousPage)" class="pagination-previous">Previous</a>
+                                <a @click="searchFilters(NextPage)" class="pagination-next">Next page</a>
+                            </ul> 
+                         
                         </div>
                              <div class="column">
                             <div >
@@ -93,13 +93,11 @@
 
 <script>
 import CrimeListRow from '~/components/Data/CrimeListRow.vue'
-import Pagination from '~/components/UI/Pagination.vue'
 
 
 export default {
   components: {
     CrimeListRow,
-    Pagination
     },
     async fetch ({store}) {
           await store.dispatch('setCrimes')
@@ -120,8 +118,14 @@ export default {
       Crimes () {
         return this.$store.state.crimes
       },
-      Pages () {
-          return this.$store.state.nbPages
+      CurrentPage () {
+          return this.$store.state.currentPage
+      },
+      NextPage () {
+          return this.$store.state.currentPage + 1
+      },
+      PreviousPage () {
+          return this.$store.state.currentPage - 1
       }
     },
     methods: {
@@ -137,7 +141,7 @@ export default {
           crimeId: crimeId
             })         
         },
-        searchFilters(filter){
+        searchFilters(page){
             this.$store.dispatch({
                 type: 'searchCrimesFilter',
                 compnos: this.compnos,
@@ -146,7 +150,8 @@ export default {
                 weaponType: this.weaponType,
                 domestic: this.domestic,
                 shooting: this.shooting,
-                fromDate: this.fromDate
+                fromDate: this.fromDate,
+                page: page
             })
         }
     },

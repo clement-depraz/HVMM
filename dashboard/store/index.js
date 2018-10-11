@@ -11,7 +11,7 @@ const createStore = () => {
       users: [],
       authUser: null,
       crimes: [],
-      nbPages: ["1", "2", "2"],
+      currentPage: 1,
       crimeDetails: null,
     },
     mutations: {
@@ -21,8 +21,8 @@ const createStore = () => {
       SetCrimes: (state, crimes) => {
         state.crimes = crimes
       },
-      SetNbResult: (state, nbresult) => {
-        state.nbPages = nbresult
+      SetCurrentPage: (state, currentPage) => {
+        state.currentPage = currentPage
       },
       removeUser: (state, userid) => {
         let users = state.users.filter((user) => user.id !== userid);
@@ -177,12 +177,12 @@ const createStore = () => {
           }
         },
         //set all crimes
-        async setCrimes ({ commit }, {pageNumber}) {
+        async setCrimes ({ commit }) {
           try
           {
             let {data} = await Hapi.post('/crime/search', {page: 1})
             commit('SetCrimes', data.results)
-            commit('SetNbResult', data.nb_result)
+            //commit('SetNbResult', data.nb_result)
           }
           catch (e)
           {
@@ -191,16 +191,16 @@ const createStore = () => {
           }
         },
         //Apply filters to crimes research
-        async searchCrimesFilter ({ commit}, { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate })
+        async searchCrimesFilter ({ commit}, { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate, page })
         {
           try
           {
-            console.log(compnos)
+            console.log(page)
             let {data} = await Hapi.post('/crime/search', 
-            { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate })
+            { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate, page})
             // Il manque la page dans les données envoyées =)
             commit('SetCrimes', data.results)
-            //commit('SetNbResult', data.nb_result)
+            commit('SetCurrentPage', data.page)
           }
           catch (e)
           {
