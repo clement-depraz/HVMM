@@ -14,36 +14,37 @@
                             <div class="panel-block">
                                 <p class="control has-icons-left">
                                     <label>compnos</label>
-                                    <input class="input is-small" type="text" placeholder="search">
+                                    <input v-model="compnos" class="input is-small" type="text" placeholder="search">
                                 </p>
                                 <p class="control has-icons-left">
                                     <label>Incident Type</label>
-                                    <input class="input is-small" type="text" placeholder="search">
+                                    <input v-model="incidentType" class="input is-small" type="text" placeholder="search">
                                 </p>
+
                                 <p class="control has-icons-left">
                                     <label>Reporting District</label>
-                                    <input class="input is-small" type="text" placeholder="search">
+                                    <input v-model="reptDist" class="input is-small" type="text" placeholder="search">
                                 </p>
                                 <p class="control has-icons-left">
                                     <label>Weapon Type</label>
-                                    <input class="input is-small" type="text" placeholder="search">
+                                    <input v-model="weaponType" class="input is-small" type="text" placeholder="search">
                                 </p>
                                 <p class="control has-icons-left">
                                     <label>Domestic</label>
-                                    <input class="input is-small" type="text" placeholder="search">
+                                    <input v-model="domestic" class="input is-small" type="text" placeholder="search">
                                 </p>
                                 <p class="control has-icons-left">
                                     <label>Shooting</label>
-                                    <input class="input is-small" type="text" placeholder="search">
+                                    <input v-model="shooting" class="input is-small" type="text" placeholder="search">
                                 </p>
                                 <p class="control has-icons-left">
                                     <label>From Date</label>
-                                    <input class="input is-small" type="text" placeholder="search">
+                                    <input v-model="fromDate" class="input is-small" type="text" placeholder="search">
                                 </p>
                             </div>
 
                               <div class="panel-block">
-                                <button class="button is-link is-outlined is-fullwidth">
+                                <button class="button is-link is-outlined is-fullwidth" @click="searchFilters">
                                     Apply research filters
                                 </button>
                             </div>
@@ -96,6 +97,17 @@ export default {
           await store.dispatch('setCrimes')
     },
     //middleware: 'auth',
+    data() {
+        return {
+        compnos: null,
+        incidentType: null,
+        reptDist: null,
+        weaponType: null,
+        domestic: null,
+        shooting: null,
+        fromDate: null
+        }
+    },
     computed: {
       Crimes () {
         return this.$store.state.crimes
@@ -113,6 +125,18 @@ export default {
           type: 'deleteCrime',
           crimeId: crimeId
             })         
+        },
+        searchFilters(filter){
+            this.$store.dispatch({
+                type: 'searchCrimesFilter',
+                compnos: this.compnos,
+                incidentType: this.incidentType,
+                reptDist: this.reptDist,
+                weaponType: this.weaponType,
+                domestic: this.domestic,
+                shooting: this.shooting,
+                fromDate: this.fromDate
+            })
         }
     },
 }

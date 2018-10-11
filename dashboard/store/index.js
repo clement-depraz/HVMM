@@ -186,6 +186,24 @@ const createStore = () => {
             myToast.goAway(1500);         
           }
         },
+        //Apply filters to crimes research
+        async searchCrimesFilter ({ commit}, { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate })
+        {
+          try
+          {
+            console.log(compnos)
+            let {data} = await axios.post('http://192.168.1.24:8080/crime/search', 
+            { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate })
+            commit('SetCrimes', data.results)
+            commit('SetNbResult', data.nb_result)
+          }
+          catch (e)
+          {
+            let myToast = this.$toast.error(e)
+            myToast.goAway(1500);         
+          }
+
+        },
         async setCrimeDetails ({ commit }, { crimeId })
         {
           try
