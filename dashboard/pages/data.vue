@@ -135,7 +135,8 @@ export default {
                 weaponType: this.weaponType,
                 domestic: this.domestic,
                 shooting: this.shooting,
-                fromDate: this.fromDate
+                fromDate: this.fromDate,
+                page: 1
             })
         }
     },

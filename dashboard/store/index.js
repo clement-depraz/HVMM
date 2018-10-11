@@ -189,14 +189,21 @@ const createStore = () => {
           }
         },
         //Apply filters to crimes research
-        async searchCrimesFilter ({ commit}, { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate })
+        async searchCrimesFilter ({ commit}, { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate, page })
         {
           try
           {
             console.log(compnos)
             let {data} = await Hapi.post('/crime/search', 
-            { compnos, incidentType, reptDist, weaponType, domestic, shooting, fromDate })
-            // Il manque la page dans les données envoyées =)
+            {
+              ...(compnos && {compnos}),
+              ...(incidentType && {incident_type_description: incidentType}),
+              ...(reptDist && {reptdistrict: reptDist}),
+              ...(weaponType && {weapontype: weaponType}),
+              ...(domestic && {domestic}),
+              ...(shooting && {shooting}),
+              ...(fromDate && {fromdate: fromDate}),
+              page })
             commit('SetCrimes', data.results)
             commit('SetNbResult', data.nb_result)
           }
