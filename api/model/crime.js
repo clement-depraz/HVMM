@@ -1,5 +1,10 @@
 'use strict';
 
+const Axios = require('axios');
+const Boom = require('boom');
+const RequireDir = require('require-directory');
+
+const Config = RequireDir(module, '../config');
 const MongoDB = require('../mongodb');
 
 module.exports = {
@@ -11,498 +16,49 @@ module.exports = {
         };
     },
     addCrime(payload) {
-        //check mongodb
-        const myobj = {
-            'compnos': 152038705,
-            'naturecode': 'SSA',
-            'incident_type_description': 'BONJOUR',
-            'main_crimecode': 'BONJOUR',
-            'reptdistrict': 'C11',
-            'reportingarea': 0,
-            'fromdate': '2015-05-12T00:10:00.000+0000',
-            'weapontype': 'Other',
-            'shooting': false,
-            'domestic': false,
-            'shift': 'Last',
-            'year': 2015,
-            'month': 5,
-            'day_week': 'Tuesday',
-            'ucrpart': 'Part Two',
-            'x': '771681.0593',
-            'y': '2935070.74',
-            'streetname': 'ROSSETER ST',
-            'xstreetname': 'BULLARD ST',
-            'location': '(42.30119026, -71.07299707)'
-        };
         return new Promise((resolve, reject) => {
-            MongoDB.collection('crime_incident_reports').insertOne(myobj, (err, res) => {
+            MongoDB.collection('crime_incident_reports').insertOne(payload, (err, res) => {
                 if (err) {
-                    throw err;
+                    resolve(Boom.badRequest('Bad request'));
+                } else {
+                    resolve(true);
                 }
-
-                console.log('1 document inserted');
-                resolve(true);
+            });
+        });
+    },
+    deleteCrime(crimeId) {
+        return new Promise((resolve, reject) => {
+            MongoDB.collection('crime_incident_reports').deleteOne({ compnos:crimeId }, (err) => {
+                if (err) {
+                    resolve(Boom.badRequest('Bad request'));
+                } else {
+                    resolve(true);
+                }
             });
         });
     },
     searchCrimes(payload) {
-
-        // var db = client.db("crime_reports");
-        // var collection = db.collection("crime_incident_reports");
-
-        // var query = {
-        //     "incident_type_description": "VANDALISM",
-        //     "compnos": {
-        //         "$gt": 152038707
-        //     },
-        //     "fromdate": {
-        //         "$gt": moment("2014-10-10 13:37:38.895+02:00").toDate()
-        //     },
-        //     "shooting": false,
-        //     "domestic": false,
-        //     "reptdistrict": "B3",
-        //     "weapontype": "Unarmed"
-        // };
-
-        // var cursor = collection.find(query);
-
-        // cursor.forEach(
-        //     function (doc) {
-        //         console.log(doc);
-        //     },
-        //     function (err) {
-        //         client.close();
-        //     }
-        // );
-        if (!payload.page || payload.page === 1) {
-            return {
-                nb_result: 19,
-                results: [{
-                    "_id": "5b9907680f5b9308002afccc",
-                    "compnos": 152038998,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-05-12T02:00:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Last",
-                    "year": 2015,
-                    "month": 5,
-                    "day_week": "Tuesday",
-                    "ucrpart": "Part Two",
-                    "x": "762207.3249",
-                    "y": "2924881.956",
-                    "streetname": "CUMMINS HY",
-                    "xstreetname": "None",
-                    "location": "(42.27335636, -71.10818955)"
-                }, {
-                    "_id": "5b9907680f5b9308002afe85",
-                    "compnos": 152049141,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-05-13T21:30:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "First",
-                    "year": 2015,
-                    "month": 5,
-                    "day_week": "Wednesday",
-                    "ucrpart": "Part Two",
-                    "x": "767077.8569",
-                    "y": "2931307.747",
-                    "streetname": "DONALD RD",
-                    "xstreetname": "None",
-                    "location": "(42.29092636, -71.09007955)"
-                }, {
-                    "_id": "5b9907680f5b9308002afe92",
-                    "compnos": 152039469,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-05-14T00:00:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Last",
-                    "year": 2015,
-                    "month": 5,
-                    "day_week": "Thursday",
-                    "ucrpart": "Part Two",
-                    "x": "769471.7612",
-                    "y": "2935203.265",
-                    "streetname": "ELLINGTON ST",
-                    "xstreetname": "None",
-                    "location": "(42.30158398, -71.08116128)"
-                }, {
-                    "_id": "5b9907680f5b9308002b0096",
-                    "compnos": 152039997,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-05-16T00:25:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Last",
-                    "year": 2015,
-                    "month": 5,
-                    "day_week": "Saturday",
-                    "ucrpart": "Part Two",
-                    "x": "765820.3275",
-                    "y": "2926334.66",
-                    "streetname": "MATTAPAN ST",
-                    "xstreetname": "None",
-                    "location": "(42.27729637, -71.09481454)"
-                }, {
-                    "_id": "5b9907680f5b9308002b015c",
-                    "compnos": 152040462,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-05-16T21:00:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "First",
-                    "year": 2015,
-                    "month": 5,
-                    "day_week": "Saturday",
-                    "ucrpart": "Part Two",
-                    "x": "771929.8987",
-                    "y": "2927442.606",
-                    "streetname": "WILMINGTON AV",
-                    "xstreetname": "None",
-                    "location": "(42.28025478, -71.07221866)"
-                }, {
-                    "_id": "5b9907680f5b9308002b039b",
-                    "compnos": 152045434,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-05-19T12:00:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Day",
-                    "year": 2015,
-                    "month": 5,
-                    "day_week": "Tuesday",
-                    "ucrpart": "Part Two",
-                    "x": "769646.5056",
-                    "y": "2929194.023",
-                    "streetname": "NORFOLK ST",
-                    "xstreetname": "None",
-                    "location": "(42.2850919, -71.08062455)"
-                }, {
-                    "_id": "5b9907680f5b9308002b0524",
-                    "compnos": 152041864,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-05-21T01:30:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Last",
-                    "year": 2015,
-                    "month": 5,
-                    "day_week": "Thursday",
-                    "ucrpart": "Part Two",
-                    "x": "None",
-                    "y": "None",
-                    "streetname": "WENTWORTH TR",
-                    "xstreetname": "None",
-                    "location": "(0.0, 0.0)"
-                }, {
-                    "_id": "5b9907680f5b9308002b05dc",
-                    "compnos": 152041992,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-05-21T19:00:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "First",
-                    "year": 2015,
-                    "month": 5,
-                    "day_week": "Thursday",
-                    "ucrpart": "Part Two",
-                    "x": "None",
-                    "y": "None",
-                    "streetname": "OAKWOOD ST",
-                    "xstreetname": "None",
-                    "location": "(0.0, 0.0)"
-                }, {
-                    "_id": "5b9907680f5b9308002b08f3",
-                    "compnos": 152044140,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-05-25T11:30:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Day",
-                    "year": 2015,
-                    "month": 5,
-                    "day_week": "Monday",
-                    "ucrpart": "Part Two",
-                    "x": "766252.4605",
-                    "y": "2929354.132",
-                    "streetname": "MORTON ST",
-                    "xstreetname": "None",
-                    "location": "(42.28557636, -71.09316455)"
-                }, {
-                    "_id": "5b9907680f5b9308002b0aa2",
-                    "compnos": 152043785,
-                    "naturecode": "PERGUN",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-05-27T05:45:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Last",
-                    "year": 2015,
-                    "month": 5,
-                    "day_week": "Wednesday",
-                    "ucrpart": "Part Two",
-                    "x": "771613.2261",
-                    "y": "2932007.611",
-                    "streetname": "DUNLAP ST",
-                    "xstreetname": "None",
-                    "location": "(42.29278579, -71.07330446)"
-                }]
-            };
-        } else if (payload.page === 2) {
-            return {
-                nb_result: 19,
-                results: [{
-                    "_id": "5b9907680f5b9308002b1058",
-                    "compnos": 152045421,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-06-02T00:41:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Last",
-                    "year": 2015,
-                    "month": 6,
-                    "day_week": "Tuesday",
-                    "ucrpart": "Part Two",
-                    "x": "766142.7938",
-                    "y": "2925394.161",
-                    "streetname": "BLUE HILL AV",
-                    "xstreetname": "None",
-                    "location": "(42.27471136, -71.09363955)"
-                }, {
-                    "_id": "5b9907680f5b9308002b115f",
-                    "compnos": 152045800,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-06-03T10:52:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Day",
-                    "year": 2015,
-                    "month": 6,
-                    "day_week": "Wednesday",
-                    "ucrpart": "Part Two",
-                    "x": "771119.3087",
-                    "y": "2924566.319",
-                    "streetname": "CEDAR ST",
-                    "xstreetname": "None",
-                    "location": "(42.27237317, -71.07526692)"
-                }, {
-                    "_id": "5b9907680f5b9308002b11f2",
-                    "compnos": 152046271,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-06-03T22:00:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "First",
-                    "year": 2015,
-                    "month": 6,
-                    "day_week": "Wednesday",
-                    "ucrpart": "Part Two",
-                    "x": "771535.1918",
-                    "y": "2928101.323",
-                    "streetname": "MORA ST",
-                    "xstreetname": "None",
-                    "location": "(42.28206777, -71.07366504)"
-                }, {
-                    "_id": "5b9907690f5b9308002b149f",
-                    "compnos": 152047155,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-06-06T19:00:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "First",
-                    "year": 2015,
-                    "month": 6,
-                    "day_week": "Saturday",
-                    "ucrpart": "Part Two",
-                    "x": "765903.1092",
-                    "y": "2929617.761",
-                    "streetname": "COURTLAND RD",
-                    "xstreetname": "None",
-                    "location": "(42.28630434, -71.09445097)"
-                }, {
-                    "_id": "5b9907690f5b9308002b15ec",
-                    "compnos": 152047578,
-                    "naturecode": "IVPER",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-06-08T08:45:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Day",
-                    "year": 2015,
-                    "month": 6,
-                    "day_week": "Monday",
-                    "ucrpart": "Part Two",
-                    "x": "766614.8591",
-                    "y": "2924022.545",
-                    "streetname": "FREMONT ST",
-                    "xstreetname": "None",
-                    "location": "(42.27094136, -71.09191955)"
-                }, {
-                    "_id": "5b9907690f5b9308002b1622",
-                    "compnos": 152047431,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-06-08T13:47:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Day",
-                    "year": 2015,
-                    "month": 6,
-                    "day_week": "Monday",
-                    "ucrpart": "Part Two",
-                    "x": "766143.2941",
-                    "y": "2923300.56",
-                    "streetname": "BLUE HILL AV",
-                    "xstreetname": "None",
-                    "location": "(42.26896636, -71.09367456)"
-                }, {
-                    "_id": "5b9907690f5b9308002b1691",
-                    "compnos": 152047634,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-06-09T06:09:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Last",
-                    "year": 2015,
-                    "month": 6,
-                    "day_week": "Tuesday",
-                    "ucrpart": "Part Two",
-                    "x": "765898.5905",
-                    "y": "2926558.567",
-                    "streetname": "WALK HILL ST",
-                    "xstreetname": "None",
-                    "location": "(42.27790976, -71.09452141)"
-                }, {
-                    "_id": "5b9907690f5b9308002b1bab",
-                    "compnos": 152049477,
-                    "naturecode": "BE",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-06-15T00:00:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "Last",
-                    "year": 2015,
-                    "month": 6,
-                    "day_week": "Monday",
-                    "ucrpart": "Part Two",
-                    "x": "765874.6752",
-                    "y": "2929830.954",
-                    "streetname": "ESTELLA ST",
-                    "xstreetname": "None",
-                    "location": "(42.28688972, -71.09455231)"
-                }, {
-                    "_id": "5b9907690f5b9308002b1c3b",
-                    "compnos": 152049712,
-                    "naturecode": "VAND",
-                    "incident_type_description": "VANDALISM",
-                    "main_crimecode": "14xx",
-                    "reptdistrict": "B3",
-                    "reportingarea": 0,
-                    "fromdate": "2015-06-15T19:15:00.000+0000",
-                    "weapontype": "Unarmed",
-                    "shooting": false,
-                    "domestic": false,
-                    "shift": "First",
-                    "year": 2015,
-                    "month": 6,
-                    "day_week": "Monday",
-                    "ucrpart": "Part Two",
-                    "x": "766932.4073",
-                    "y": "2923512.366",
-                    "streetname": "RIVER ST",
-                    "xstreetname": "None",
-                    "location": "(42.26953722, -71.09075535)"
-                }]
-            };
-        }
-        return "Invalid page number"
+        const instance = Axios.create({
+            baseURL: Config.env.microservices.search_crime,
+            timeout: 4000
+        });
+        const params = {
+            page: payload.page - 1,
+            filters: payload
+        };
+        delete params.filters.page;
+        return new Promise((resolve, reject) => {
+            instance.post('/search', params)
+                .then((response) => {
+                    resolve(response.data);
+                }).catch((error) => {
+                    if (error.response) {
+                        const data = error.response.data;
+                        resolve(Boom.badRequest(data[Object.keys(data)[0]]));
+                    } else if (error.request) {
+                        resolve(Boom.serverUnavailable('Microservice unreachable.'));
+                    }
+                });
+        });
     }
 };

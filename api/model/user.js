@@ -14,10 +14,10 @@ module.exports = {
             timeout: 4000
         });
         return new Promise((resolve, reject) => {
-            instance.post("/app_user", request.payload)
-                .then(function (response) {
+            instance.post('/app_user', request.payload)
+                .then((response) => {
                     resolve(response.data);
-                }).catch(function (error) {
+                }).catch((error) => {
                     if (error.response) {
                         const data = error.response.data;
                         resolve(Boom.badRequest(data[Object.keys(data)[0]]));
@@ -56,11 +56,11 @@ module.exports = {
             timeout: 4000
         });
         return new Promise((resolve, reject) => {
-            axiosInstance.get("/app_user/pending")
-                .then(function (response) {
+            axiosInstance.get('/app_user/pending')
+                .then((response) => {
                     resolve(response.data);
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     if (error.response) {
                         resolve(Boom.badRequest('Bad request'));
                     } else if (error.request) {
@@ -77,25 +77,25 @@ module.exports = {
         });
         if (isValidated) {
             return new Promise((resolve, reject) => {
-                axiosInstance.put("/app_user/" + userId + "/certify")
-                .then(function (response) {
-                    resolve(response.data);
-                })
-                .catch(function (error) {
-                    if (error.response) {
-                        resolve(Boom.badRequest(error.response.data));
-                    } else if (error.request) {
-                        resolve(Boom.serverUnavailable('Microservice unreachable.'));
-                    }
-                });
+                axiosInstance.put('/app_user/' + userId + '/certify')
+                    .then((response) => {
+                        resolve(response.data);
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                            resolve(Boom.badRequest(error.response.data));
+                        } else if (error.request) {
+                            resolve(Boom.serverUnavailable('Microservice unreachable.'));
+                        }
+                    });
             });
         } else {
             return new Promise((resolve, reject) => {
-                axiosInstance.delete("/app_user/" + userId)
-                    .then(function (response) {
+                axiosInstance.delete('/app_user/' + userId)
+                    .then((response) => {
                         resolve(response.data);
                     })
-                    .catch(function (error) {
+                    .catch((error) => {
                         if (error.response) {
                             resolve(Boom.badRequest('Bad request'));
                         } else if (error.request) {
@@ -112,11 +112,11 @@ module.exports = {
             timeout: 4000
         });
         return new Promise((resolve, reject) => {
-            axiosInstance.get("/app_user/export")
-                .then(function (response) {
+            axiosInstance.get('/app_user/export')
+                .then((response) => {
                     resolve(response.data);
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     if (error.response) {
                         resolve(Boom.badRequest('Bad request'));
                     } else if (error.request) {

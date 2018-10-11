@@ -37,9 +37,24 @@ services:
       - 8080:8080
     links:
       - edit_user
+      - export_user
+      - search_crime
     depends_on:
       - mysql
       - mongodb
+
+  search_crime:
+    build: ../microservice_search_crime
+    container_name: search_crime
+    restart: always
+    volumes:
+      - ../microservice_search_crime:/app
+    ports:
+      - 5000:5000
+    depends_on:
+      - mongodb
+    environment:
+      WORK_ENV: DEV
 
   edit_user:
     build: ../microservice_edit_user/images/nginx
