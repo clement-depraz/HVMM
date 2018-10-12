@@ -6,7 +6,7 @@
         <td>{{ crime.weapontype }}</td>
         <td>{{ crime.domestic }}</td>
         <td>{{ crime.shooting }}</td>
-        <td>{{ new Date(crime.fromdate['$date']).toLocaleString() }}</td>
+        <td><span v-if="crime.fromdate">{{ new Date(crime.fromdate['$date']).toLocaleString() }}</span></td>
         <td>
        <!--        <a @click="onDetailsClick" class="button is-success">Details</a> -->
          <nuxt-link :to="'/data/'+crime.compnos" class="button is-info">Details</nuxt-link>   

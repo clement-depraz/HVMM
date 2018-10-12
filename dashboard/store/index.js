@@ -43,7 +43,7 @@ const createStore = () => {
         state.crimeDetails = crimeDetails[0]
       },
       SetDeleteCrime: (state, crimeId) => {
-        let crimes = state.crimes.filter((crime) => crime.id !== crimeId);
+        let crimes = state.crimes.filter((crime) => crime.compnos !== crimeId);
         state.crimes = crimes
       },
       AddNewCrime: (state, newCrime) =>
@@ -240,7 +240,17 @@ const createStore = () => {
         {
           try
           {
-            let data = await Hapi.post(`/crime`, {newCrime} )
+            let crimeKeys = ['compnos', 'naturecode', 'incident_type_description', 'main_crimecode', 'reptdistrict', 'reportingarea', 'fromdate', 'weapontype', 'shooting', 'domestic', 'shift', 'year', 'month', 'day_week', 'ucrpart', 'x', 'y', 'streetname', 'xstreetname', 'location'];
+            Object.keys(newCrime).forEach(key => (newCrime[key] === undefined || newCrime[key] === '') && delete newCrime[key]);
+            ['compnos', 'reportingarea', 'year', 'month', 'x', 'y'].forEach(key => {
+              if (newCrime[key]) {
+                newCrime[key] = parseInt(newCrime[key]);
+              }
+            });
+            let newFormattedCrime = {};
+            Object.keys(newCrime).forEach(key => { if (crimeKeys.indexOf(key) !== -1) newFormattedCrime[key] = newCrime[key]});
+            console.log(newFormattedCrime)
+            let data = await Hapi.post(`/crime`, newFormattedCrime )
             this.$router.push("/data")
             commit('AddNewCrime', newCrime) 
           }
