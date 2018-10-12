@@ -233,7 +233,8 @@ const createStore = () => {
           try
           {
             let data = await Hapi.delete(`/crime/${crimeId}`)
-            commit('SetDeleteCrime', crimeId) 
+            commit('SetDeleteCrime', crimeId)
+            this.$router.push({ path: '/data' })
           }
           catch(e)
           {
