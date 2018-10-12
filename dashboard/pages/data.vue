@@ -44,7 +44,7 @@
                             </div>
 
                               <div class="panel-block">
-                                <button class="button is-link is-outlined is-fullwidth" @click="searchFilters ">
+                                <button class="button is-link is-outlined is-fullwidth" @click="searchFilters(1)">
                                     Apply research filters
                                 </button>
                             </div>
@@ -72,6 +72,11 @@
                                     @delete="crimeDelete"/>
                                 </tbody>
                             </table>
+                            <ul class="pagination-list">
+                                <a @click="searchFilters(PreviousPage)" class="pagination-previous">Previous</a>
+                                <a @click="searchFilters(NextPage)" class="pagination-next">Next page</a>
+                            </ul> 
+                         
                         </div>
                              <div class="column">
                             <div >
@@ -89,9 +94,10 @@
 <script>
 import CrimeListRow from '~/components/Data/CrimeListRow.vue'
 
+
 export default {
   components: {
-    CrimeListRow
+    CrimeListRow,
     },
     async fetch ({store}) {
           await store.dispatch('setCrimes')
@@ -111,6 +117,15 @@ export default {
     computed: {
       Crimes () {
         return this.$store.state.crimes
+      },
+      CurrentPage () {
+          return this.$store.state.currentPage
+      },
+      NextPage () {
+          return this.$store.state.currentPage + 1
+      },
+      PreviousPage () {
+          return this.$store.state.currentPage - 1
       }
     },
     methods: {
@@ -126,7 +141,7 @@ export default {
           crimeId: crimeId
             })         
         },
-        searchFilters(filter){
+        searchFilters(page){
             this.$store.dispatch({
                 type: 'searchCrimesFilter',
                 compnos: this.compnos,
@@ -136,7 +151,7 @@ export default {
                 domestic: this.domestic,
                 shooting: this.shooting,
                 fromDate: this.fromDate,
-                page: 1
+                page: page
             })
         }
     },
