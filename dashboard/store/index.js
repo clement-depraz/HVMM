@@ -12,6 +12,7 @@ const createStore = () => {
       authUser: null,
       crimes: [],
       currentPage: 1,
+      maxPage: 2,
       crimeDetails: null,
     },
     mutations: {
@@ -23,6 +24,9 @@ const createStore = () => {
       },
       SetCurrentPage: (state, currentPage) => {
         state.currentPage = currentPage
+      },
+      SetMaxPage: (state, maxPage) => {
+        state.maxPage = maxPage
       },
       removeUser: (state, userid) => {
         let users = state.users.filter((user) => user.id !== userid);
@@ -203,6 +207,7 @@ const createStore = () => {
               page })
             commit('SetCrimes', data.results)
             commit('SetCurrentPage', data.page)
+            commit('SetMaxPage',  data.page_max)
           }
           catch (e)
           {
