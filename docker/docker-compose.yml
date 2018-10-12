@@ -39,14 +39,24 @@ services:
       - mysql
       - mongodb
 
+  dashboard:
+    build: ../dashboard
+    container_name: dashboard
+    restart: always
+    command: npm run dev
+    volumes:
+      - ../dashboard:/app
+    ports:
+      - 3333:3333
+    depends_on:
+      - hapijs
+
   search_crime:
     build: ../microservice_search_crime
     container_name: search_crime
     restart: always
     volumes:
       - ../microservice_search_crime:/app
-    ports:
-      - 5000:5000
     depends_on:
       - mongodb
     environment:
@@ -87,8 +97,6 @@ services:
     build: ../microservice_export_user/images/nginx
     container_name: export_user
     command: nginx -g "daemon off;"
-    ports:
-      - 8082:8082
     links:
       - microservice_export_user
 
