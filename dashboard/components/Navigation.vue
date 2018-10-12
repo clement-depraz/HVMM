@@ -30,7 +30,7 @@
                     <div class="navbar-start" >
                         <nuxt-link class="navbar-item" to="/">Home</nuxt-link>
 
-                        <nuxt-link class="navbar-item" to="/entries">Entries</nuxt-link>
+                        <nuxt-link v-if="$store.state.authUser.rank < 3" class="navbar-item" to="/entries">Entries</nuxt-link>
 
                         <nuxt-link class="navbar-item" to="/data">Dashboard</nuxt-link>
 
@@ -65,7 +65,20 @@ export default {
           this.$store.dispatch({
           type: 'logout'})
          }
+    },
+    mounted() {
+            if (!this.$store.state.authUser) {
+                if (localStorage.getItem("authUser")) {
+                    this.$store.commit("setAuthUser", JSON.parse(localStorage.getItem("authUser")))
+                    console.log("setAuthUser")
+                    let currentPath =  this.$nuxt.$route.path
+                    console.log(currentPath)
+                    this.$nuxt.$router.push({ path: '/'})            
+                }
+        }
+    
     }
+    
   
 }
 </script>

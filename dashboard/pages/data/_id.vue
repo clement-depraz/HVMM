@@ -18,7 +18,7 @@ export default {
       validate({ params }) {
       return !isNaN(+params.id)
     },
-    //middleware: 'auth',
+    middleware: 'auth',
      async fetch ({params, store}) {
           console.log(params)
           store.dispatch({

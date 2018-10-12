@@ -27,6 +27,6 @@ export default {
       console.log(postData)
     }
   },
-  //middleware: 'auth'
+  middleware: 'auth'
 };
 </script>

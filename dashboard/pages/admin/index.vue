@@ -45,7 +45,7 @@ export default {
     async fetch ({store}) {
           await store.dispatch('setUsers')
     },
-    //middleware: 'authAdmin',
+    middleware: 'authAdmin',
     computed: {
       Users () {
         return this.$store.state.users

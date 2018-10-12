@@ -2,7 +2,7 @@ import Vuex from 'vuex'
 import axios from "axios"
 
 const Hapi = axios.create({
-  baseURL: 'http://192.168.1.24:8080'
+  baseURL: 'http://172.16.24.245:8080'
 });
 
 const createStore = () => {
@@ -34,6 +34,8 @@ const createStore = () => {
       },
       setAuthUser: (state, authUser) => {
         state.authUser = authUser
+        localStorage.setItem('authUser',  JSON.stringify(authUser))
+        console.log(authUser)
       },
       SetCrimeDetails: (state, crimeId) => {
         var crimeDetails = state.crimes.filter((crime) => crime.compnos == crimeId);
@@ -45,7 +47,7 @@ const createStore = () => {
         state.crimeDetails = crimeDetails[0]
       },
       SetDeleteCrime: (state, crimeId) => {
-        let crimes = state.crimes.filter((crime) => crime.id !== crimeId);
+        let crimes = state.crimes.filter((crime) => crime.compnos !== crimeId);
         state.crimes = crimes
       },
       AddNewCrime: (state, newCrime) =>
@@ -60,17 +62,8 @@ const createStore = () => {
         async nuxtServerInit ({ commit }, {req}) {
           try
           {
-            
             let {data} = await Hapi.get('/ping')
             console.log("Serveur Init");
-            if (req.session && req.session.authUser) {
-              commit('setAuthUser', req.session.authUser)
-              console.log("session");
-            }  
-            //data = await axios.get('http://192.168.1.24:8080/crime/search', {page: 1})
-            //commit('SetCrimes', data.results)
-            //commit('SetNbResult', data.nb_result)
-                     
           }
           catch (error)
           {
@@ -95,6 +88,7 @@ const createStore = () => {
         {
           try
           {
+            await Hapi.get('/ping')
             console.log("fonction login", email, password)
             let {data} = await Hapi.post('/login', {email, password})
             commit('setAuthUser', data)
@@ -118,6 +112,7 @@ const createStore = () => {
           {
             await Hapi.get('/logout')
             commit('setAuthUser', null)
+            localStorage.removeItem('authUser')
             this.$router.replace({ path: '/' })
 
           }
@@ -243,14 +238,24 @@ const createStore = () => {
           catch(e)
           {
             let myToast = this.$toast.error(e)
-            myToast.goAway(1500);   
-          }          
+            myToast.goAway(1500);
+          }
         },
         async postNewCrime ({ commit }, { newCrime })
         {
           try
           {
-            let data = await Hapi.post(`/crime`, {newCrime} )
+            let crimeKeys = ['compnos', 'naturecode', 'incident_type_description', 'main_crimecode', 'reptdistrict', 'reportingarea', 'fromdate', 'weapontype', 'shooting', 'domestic', 'shift', 'year', 'month', 'day_week', 'ucrpart', 'x', 'y', 'streetname', 'xstreetname', 'location'];
+            Object.keys(newCrime).forEach(key => (newCrime[key] === undefined || newCrime[key] === '') && delete newCrime[key]);
+            ['compnos', 'reportingarea', 'year', 'month', 'x', 'y'].forEach(key => {
+              if (newCrime[key]) {
+                newCrime[key] = parseInt(newCrime[key]);
+              }
+            });
+            let newFormattedCrime = {};
+            Object.keys(newCrime).forEach(key => { if (crimeKeys.indexOf(key) !== -1) newFormattedCrime[key] = newCrime[key]});
+            console.log(newFormattedCrime)
+            let data = await Hapi.post(`/crime`, newFormattedCrime )
             this.$router.push("/data")
             commit('AddNewCrime', newCrime) 
           }
@@ -264,18 +269,16 @@ const createStore = () => {
         {
           try
           {
-            Hapi.get(`/user/export.csv`, {
+            let response = await Hapi.get(`/user/export.csv`, {
               responseType: 'blob'
-            }).then((response) => {
-              const url = window.URL.createObjectURL(new Blob([response.data]));
-              const link = document.createElement('a');
-              link.href = url;
-              link.setAttribute('download', 'export.csv');
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-            });
-          //  console.log(data);
+            })
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'export.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
           }
           catch(e)
           {

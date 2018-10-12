@@ -52,7 +52,9 @@
                 <strong>From Date:</strong>
                 </div>
                 <div class="col-md-3">
-                {{ new Date(crime.fromdate['$date']).toLocaleString() }}
+                    <span v-if="crime.fromdate">
+                        {{ new Date(crime.fromdate['$date']).toLocaleString() }}
+                    </span>
                 </div>
             </div>
 

@@ -73,9 +73,9 @@
                                 </tbody>
                             </table>
                             <ul class="pagination-list" >
-                                <a v-if="$store.state.currentPage !== 1 " @click="searchFilters(PreviousPage)" class="pagination-previous">Previous</a>
-                                <a v-if="$store.state.currentPage !== $store.state.maxPage" @click="searchFilters(NextPage)" class="pagination-next">Next page</a>
-                            </ul> 
+                                <a @click="searchFilters(PreviousPage)" class="pagination-previous">Previous</a>	                                <a v-if="$store.state.currentPage !== 1 " @click="searchFilters(PreviousPage)" class="pagination-previous">Previous</a>
+                                <a @click="searchFilters(NextPage)" class="pagination-next">Next page</a>	                                <a v-if="$store.state.currentPage !== $store.state.maxPage" @click="searchFilters(NextPage)" class="pagination-next">Next page</a>
+                            </ul>
                          
                         </div>
                              <div class="column">
@@ -102,7 +102,7 @@ export default {
     async fetch ({store}) {
           await store.dispatch('setCrimes')
     },
-    //middleware: 'auth',
+    middleware: 'auth',
     data() {
         return {
         compnos: null,
