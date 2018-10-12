@@ -11,7 +11,7 @@
        <!--        <a @click="onDetailsClick" class="button is-success">Details</a> -->
          <nuxt-link :to="'/data/'+crime.compnos" class="button is-info">Details</nuxt-link>   
         </td>
-        <td>
+        <td v-if="$store.state.authUser.rank === 1">
             <a @click="onDeleteClick" class="button is-danger">Delete</a>
         </td>
     </tr>

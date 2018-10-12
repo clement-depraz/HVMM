@@ -102,7 +102,7 @@ export default {
     async fetch ({store}) {
           await store.dispatch('setCrimes')
     },
-    //middleware: 'auth',
+    middleware: 'auth',
     data() {
         return {
         compnos: null,

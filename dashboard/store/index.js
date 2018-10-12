@@ -30,6 +30,8 @@ const createStore = () => {
       },
       setAuthUser: (state, authUser) => {
         state.authUser = authUser
+        localStorage.setItem('authUser',  JSON.stringify(authUser))
+        console.log(authUser)
       },
       SetCrimeDetails: (state, crimeId) => {
         var crimeDetails = state.crimes.filter((crime) => crime.compnos == crimeId);
@@ -56,13 +58,8 @@ const createStore = () => {
         async nuxtServerInit ({ commit }, {req}) {
           try
           {
-            
             let {data} = await Hapi.get('/ping')
             console.log("Serveur Init");
-            if (req.session && req.session.authUser) {
-              commit('setAuthUser', req.session.authUser)
-              console.log("session");
-            }  
           }
           catch (error)
           {
@@ -111,6 +108,7 @@ const createStore = () => {
           {
             await Hapi.get('/logout')
             commit('setAuthUser', null)
+            localStorage.removeItem('authUser')
             this.$router.replace({ path: '/' })
 
           }
