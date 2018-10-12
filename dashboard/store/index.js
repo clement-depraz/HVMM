@@ -2,7 +2,7 @@ import Vuex from 'vuex'
 import axios from "axios"
 
 const Hapi = axios.create({
-  baseURL: 'http://192.168.1.24:8080'
+  baseURL: 'http://172.16.24.245:8080'
 });
 
 const createStore = () => {
@@ -61,10 +61,9 @@ const createStore = () => {
               commit('setAuthUser', req.session.authUser)
               console.log("session");
             }  
-            data = await Hapi.get('/crime/search', {page: 1})
-            commit('SetCrimes', data.results)
-            commit('SetNbResult', data.nb_result)
-                     
+            // data = await Hapi.get('/crime/search', {page: 1})
+            // commit('SetCrimes', data.results)
+            // commit('SetNbResult', data.nb_result)                     
           }
           catch (error)
           {
@@ -89,6 +88,7 @@ const createStore = () => {
         {
           try
           {
+            await Hapi.get('/ping')
             console.log("fonction login", email, password)
             let {data} = await Hapi.post('/login', {email, password})
             commit('setAuthUser', data)
