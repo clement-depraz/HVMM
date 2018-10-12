@@ -235,8 +235,8 @@ const createStore = () => {
           catch(e)
           {
             let myToast = this.$toast.error(e)
-            myToast.goAway(1500);   
-          }          
+            myToast.goAway(1500);
+          }
         },
         async postNewCrime ({ commit }, { newCrime })
         {
@@ -256,18 +256,16 @@ const createStore = () => {
         {
           try
           {
-            Hapi.get(`/user/export.csv`, {
+            let response = await Hapi.get(`/user/export.csv`, {
               responseType: 'blob'
-            }).then((response) => {
-              const url = window.URL.createObjectURL(new Blob([response.data]));
-              const link = document.createElement('a');
-              link.href = url;
-              link.setAttribute('download', 'export.csv');
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-            });
-          //  console.log(data);
+            })
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'export.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
           }
           catch(e)
           {
